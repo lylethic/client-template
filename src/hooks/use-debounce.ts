@@ -1,29 +1,6 @@
 "use client";
 
-import { useEffect, useRef } from "react";
-
-/**
- * Returns a stable ref that holds the latest version of a callback
- * without causing re-renders or stale closure issues.
- *
- * Useful for event handlers in useEffect that need access to current props/state.
- *
- * @example
- * const onMessage = useLatestCallback((msg: string) => {
- *   setMessages(prev => [...prev, msg]);
- * });
- */
-export function useLatestCallback<T extends (...args: unknown[]) => unknown>(fn: T): T {
-  const ref = useRef<T>(fn);
-
-  useEffect(() => {
-    ref.current = fn;
-  }, [fn]);
-
-  return useRef<T>(
-    ((...args) => ref.current(...args)) as T,
-  ).current;
-}
+import { useEffect, useRef, useState } from "react";
 
 /**
  * Debounce hook — returns a debounced version of the given value.
@@ -36,9 +13,7 @@ export function useLatestCallback<T extends (...args: unknown[]) => unknown>(fn:
  * useEffect(() => { fetchResults(debouncedSearch); }, [debouncedSearch]);
  */
 export function useDebounce<T>(value: T, delay = 300): T {
-  const [debouncedValue, setDebouncedValue] = useRef(value).current
-    ? [value, () => {}]
-    : [value, () => {}];
+  const [debouncedValue, setDebouncedValue] = useState<T>(value);
 
   useEffect(() => {
     const handler = setTimeout(() => {
@@ -46,9 +21,35 @@ export function useDebounce<T>(value: T, delay = 300): T {
     }, delay);
 
     return () => clearTimeout(handler);
-  }, [value, delay, setDebouncedValue]);
+  }, [value, delay]);
 
   return debouncedValue;
 }
 
-export { useDebounce as default };
+/**
+ * Returns a ref that always holds the most recent version of a callback.
+ * Use `callbackRef.current()` to invoke it with the latest closure values.
+ *
+ * Useful for stable event listeners that need access to current state/props
+ * without re-registering when dependencies change.
+ *
+ * @example
+ * const onMessageRef = useCallbackRef(onMessage);
+ * useEffect(() => {
+ *   connection.on("message", onMessageRef.current);
+ *   return () => connection.off("message", onMessageRef.current);
+ * }, [connection, onMessageRef]);
+ */
+export function useCallbackRef<T extends (...args: Parameters<T>) => ReturnType<T>>(
+  fn: T,
+): React.RefObject<T> {
+  const ref = useRef<T>(fn);
+
+  useEffect(() => {
+    ref.current = fn;
+  });
+
+  return ref;
+}
+
+export default useDebounce;
