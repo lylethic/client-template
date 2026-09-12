@@ -1,15 +1,9 @@
 import { create } from "zustand";
 import { devtools, persist } from "zustand/middleware";
 
-// ─── Auth Store Types ────────────────────────────────────────────────────────
+import type { User, UserRole } from "@/modules/auth/types";
 
-interface User {
-  id: string;
-  email: string;
-  name: string;
-  avatarUrl?: string;
-  roles: string[];
-}
+// ─── Auth Store Types ─────────────────────────────────────────────────────────
 
 interface AuthState {
   user: User | null;
@@ -19,23 +13,30 @@ interface AuthState {
   // Actions
   setUser: (user: User, token: string) => void;
   clearAuth: () => void;
+
+  // Helpers
+  hasRole: (role: UserRole) => boolean;
+  isAdmin: () => boolean;
+  isStaff: () => boolean;
+  isCustomer: () => boolean;
 }
 
-// ─── Auth Store ──────────────────────────────────────────────────────────────
+// ─── Auth Store ───────────────────────────────────────────────────────────────
 
 /**
  * Global authentication store using Zustand.
  *
- * Persists user session to localStorage (access_token + user profile).
+ * Persists user session to localStorage (user profile + isAuthenticated flag).
+ * The raw access token is stored separately in localStorage via `api-client.ts`.
  * Use the `devtools` middleware to inspect state in Redux DevTools.
  *
  * @example
- * const { user, isAuthenticated, clearAuth } = useAuthStore();
+ * const { user, isAuthenticated, clearAuth, isAdmin } = useAuthStore();
  */
 export const useAuthStore = create<AuthState>()(
   devtools(
     persist(
-      (set) => ({
+      (set, get) => ({
         user: null,
         accessToken: null,
         isAuthenticated: false,
@@ -47,17 +48,21 @@ export const useAuthStore = create<AuthState>()(
 
         clearAuth: () => {
           localStorage.removeItem("access_token");
-          set(
-            { user: null, accessToken: null, isAuthenticated: false },
-            false,
-            "auth/clearAuth",
-          );
+          set({ user: null, accessToken: null, isAuthenticated: false }, false, "auth/clearAuth");
         },
+
+        hasRole: (role) => get().user?.roles.includes(role) ?? false,
+        isAdmin: () => get().hasRole("ADMIN"),
+        isStaff: () => get().hasRole("STAFF"),
+        isCustomer: () => get().hasRole("CUSTOMER"),
       }),
       {
         name: "auth-storage",
-        // Only persist the user profile — not the token (handled via localStorage separately)
-        partialize: (state) => ({ user: state.user, isAuthenticated: state.isAuthenticated }),
+        // Only persist the user profile — token is managed separately
+        partialize: (state) => ({
+          user: state.user,
+          isAuthenticated: state.isAuthenticated,
+        }),
       },
     ),
     { name: "AuthStore" },

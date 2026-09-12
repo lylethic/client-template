@@ -1,0 +1,13 @@
+{
+  "nav": {
+    "home": "Trang chủ",
+    "about": "Giới thiệu",
+    "services": "Dịch vụ",
+    "careers": "Tuyển dụng",
+    "profile": "Hồ sơ",
+    "logout": "Đăng xuất",
+    "openMenu": "Mở menu",
+    "closeMenu": "Đóng menu",
+    "switchLanguage": "Chuyển ngôn ngữ"
+  }
+}
