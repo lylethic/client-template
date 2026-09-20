@@ -2,10 +2,11 @@
 
 import { useEffect, useRef, useState } from "react";
 import { useTranslations } from "next-intl";
+import { useTheme } from "next-themes";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { cn } from "cn";
-import { Menu, User, X } from "lucide-react";
+import { Laptop, LayoutDashboard, Menu, Moon, Sun, User, X } from "lucide-react";
 import { toast } from "sonner";
 
 import { useAuthStore } from "@/stores/auth.store";
@@ -82,11 +83,35 @@ function LanguageSwitcher() {
   );
 }
 
+// ─── Theme Toggle ────────────────────────────────────────────────────────────
+
+function ThemeToggle() {
+  const { theme, setTheme } = useTheme();
+  const tTheme = useTranslations("theme");
+
+  return (
+    <Button
+      variant="ghost"
+      size="icon"
+      className="text-muted-foreground hover:text-foreground size-8"
+      aria-label={tTheme("theme")}
+      onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
+      title={tTheme("toggleTheme")}
+    >
+      <Sun className="size-4 scale-100 rotate-0 transition-all dark:scale-0 dark:-rotate-90" />
+      <Moon className="absolute size-4 scale-0 rotate-90 transition-all dark:scale-100 dark:rotate-0" />
+      <span className="sr-only">{tTheme("toggleTheme")}</span>
+    </Button>
+  );
+}
+
 // ─── User Menu ────────────────────────────────────────────────────────────────
 
 function UserMenu() {
   const t = useTranslations("nav");
+  const tTheme = useTranslations("theme");
   const router = useRouter();
+  const { theme, setTheme } = useTheme();
   const user = useAuthStore((s) => s.user);
   const clearAuth = useAuthStore((s) => s.clearAuth);
 
@@ -115,16 +140,71 @@ function UserMenu() {
       >
         <User className="size-5" aria-hidden />
       </DropdownMenuTrigger>
-      <DropdownMenuContent align="end" className="min-w-44">
+      <DropdownMenuContent align="end" className="min-w-48">
         <div className="px-2 py-1.5 text-sm">
-          <p className="truncate leading-tight font-medium">{user.fullname ?? user.username}</p>
+          <p className="truncate leading-tight font-medium">{user.full_name ?? user.email}</p>
           <p className="text-muted-foreground truncate text-xs">{user.email}</p>
         </div>
         <DropdownMenuSeparator />
+        <DropdownMenuItem render={<Link href="/dashboard" className="cursor-pointer" />}>
+          <LayoutDashboard className="mr-2 size-4" aria-hidden />
+          {t("dashboard")}
+        </DropdownMenuItem>
         <DropdownMenuItem render={<Link href="/profile" className="cursor-pointer" />}>
           <User className="mr-2 size-4" aria-hidden />
           {t("profile")}
         </DropdownMenuItem>
+        <DropdownMenuSeparator />
+
+        {/* Theme mode selection */}
+        <div className="text-muted-foreground px-2 py-1 text-[11px] font-semibold tracking-wider uppercase">
+          {tTheme("theme")}
+        </div>
+        <div className="grid grid-cols-3 gap-1 px-2 py-1">
+          <button
+            type="button"
+            onClick={() => setTheme("light")}
+            className={cn(
+              "flex flex-col items-center justify-center rounded p-1.5 text-[11px] font-medium transition-colors",
+              theme === "light"
+                ? "bg-primary text-primary-foreground font-semibold"
+                : "text-muted-foreground hover:bg-muted",
+            )}
+            title={tTheme("light")}
+          >
+            <Sun className="mb-0.5 size-3.5" />
+            <span>{tTheme("light")}</span>
+          </button>
+          <button
+            type="button"
+            onClick={() => setTheme("dark")}
+            className={cn(
+              "flex flex-col items-center justify-center rounded p-1.5 text-[11px] font-medium transition-colors",
+              theme === "dark"
+                ? "bg-primary text-primary-foreground font-semibold"
+                : "text-muted-foreground hover:bg-muted",
+            )}
+            title={tTheme("dark")}
+          >
+            <Moon className="mb-0.5 size-3.5" />
+            <span>{tTheme("dark")}</span>
+          </button>
+          <button
+            type="button"
+            onClick={() => setTheme("system")}
+            className={cn(
+              "flex flex-col items-center justify-center rounded p-1.5 text-[11px] font-medium transition-colors",
+              theme === "system"
+                ? "bg-primary text-primary-foreground font-semibold"
+                : "text-muted-foreground hover:bg-muted",
+            )}
+            title={tTheme("system")}
+          >
+            <Laptop className="mb-0.5 size-3.5" />
+            <span>{tTheme("system")}</span>
+          </button>
+        </div>
+
         <DropdownMenuSeparator />
         <DropdownMenuItem
           onClick={handleLogout}
@@ -217,6 +297,7 @@ export function Navbar() {
 
         {/* ── Right: Language + User ── */}
         <div className="flex flex-1 items-center justify-end gap-1">
+          <ThemeToggle />
           <LanguageSwitcher />
           <UserMenu />
 

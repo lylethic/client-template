@@ -5,6 +5,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Loader2 } from "lucide-react";
+import { toast } from "sonner";
 import { z } from "zod";
 
 import { useAuthStore } from "@/stores/auth.store";
@@ -19,22 +20,16 @@ import {
 } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { register as registerUser } from "@/modules/auth/auth.service";
+import { getMe, login, register as registerUser } from "@/modules/auth/auth.service";
 
 // ─── Schema ───────────────────────────────────────────────────────────────────
 
 const registerSchema = z
   .object({
-    fullname: z.string().min(2, { message: "Full name must be at least 2 characters." }),
-    username: z
-      .string()
-      .min(3, { message: "Username must be at least 3 characters." })
-      .regex(/^\w+$/, { message: "Username can only contain letters, numbers, and underscores." }),
+    full_name: z.string().min(2, { message: "Full name must be at least 2 characters." }),
     email: z.string().email({ message: "Enter a valid email address." }),
-    password: z.string().min(8, { message: "Password must be at least 8 characters." }),
+    password: z.string().min(6, { message: "Password must be at least 6 characters." }),
     confirmPassword: z.string(),
-    address: z.string().min(1, { message: "Address is required." }),
-    dayOfBirth: z.string().min(1, { message: "Date of birth is required." }),
   })
   .refine((d) => d.password === d.confirmPassword, {
     message: "Passwords do not match.",
@@ -47,7 +42,7 @@ type RegisterFormValues = z.infer<typeof registerSchema>;
 
 export default function RegisterPage() {
   const router = useRouter();
-  const setUser = useAuthStore((s) => s.setUser);
+  const { setTokens, setUser } = useAuthStore();
 
   const {
     register,
@@ -59,14 +54,22 @@ export default function RegisterPage() {
 
   const onSubmit = async (values: RegisterFormValues) => {
     try {
-      const { confirmPassword: _confirmPassword, ...payload } = values;
-      void _confirmPassword;
-      const { user, accessToken } = await registerUser(payload);
-      setUser(user, accessToken);
+      const { confirmPassword: _cp, ...payload } = values;
+      void _cp;
 
-      // New accounts are customers by default → go to dashboard
-      const isAdminOrStaff = user.roles.includes("ADMIN") || user.roles.includes("STAFF");
-      router.replace(isAdminOrStaff ? "/admin" : "/dashboard");
+      // 1. Register account
+      await registerUser(payload);
+
+      // 2. Auto-login to get tokens
+      const tokens = await login({ email: values.email, password: values.password });
+      setTokens(tokens.access_token, tokens.refresh_token);
+
+      // 3. Fetch user profile
+      const user = await getMe();
+      setUser(user, tokens.access_token);
+
+      toast.success("Account created successfully!");
+      router.replace(user.is_superuser ? "/admin" : "/dashboard");
     } catch {
       // Errors are already toasted by the api-client response interceptor
     }
@@ -83,36 +86,18 @@ export default function RegisterPage() {
         <CardContent className="space-y-4">
           {/* Full name */}
           <div className="space-y-2">
-            <Label htmlFor="fullname">Full name</Label>
+            <Label htmlFor="full_name">Full name</Label>
             <Input
-              id="fullname"
+              id="full_name"
               placeholder="Jane Doe"
               autoComplete="name"
-              aria-invalid={!!errors.fullname}
-              aria-describedby={errors.fullname ? "fullname-error" : undefined}
-              {...register("fullname")}
+              aria-invalid={!!errors.full_name}
+              aria-describedby={errors.full_name ? "fullname-error" : undefined}
+              {...register("full_name")}
             />
-            {errors.fullname && (
+            {errors.full_name && (
               <p id="fullname-error" className="text-destructive text-sm">
-                {errors.fullname.message}
-              </p>
-            )}
-          </div>
-
-          {/* Username */}
-          <div className="space-y-2">
-            <Label htmlFor="username">Username</Label>
-            <Input
-              id="username"
-              placeholder="jane_doe"
-              autoComplete="username"
-              aria-invalid={!!errors.username}
-              aria-describedby={errors.username ? "username-error" : undefined}
-              {...register("username")}
-            />
-            {errors.username && (
-              <p id="username-error" className="text-destructive text-sm">
-                {errors.username.message}
+                {errors.full_name.message}
               </p>
             )}
           </div>
@@ -170,42 +155,6 @@ export default function RegisterPage() {
             {errors.confirmPassword && (
               <p id="confirmPassword-error" className="text-destructive text-sm">
                 {errors.confirmPassword.message}
-              </p>
-            )}
-          </div>
-
-          {/* Address */}
-          <div className="space-y-2">
-            <Label htmlFor="address">Address</Label>
-            <Input
-              id="address"
-              placeholder="123 Main St, City"
-              autoComplete="street-address"
-              aria-invalid={!!errors.address}
-              aria-describedby={errors.address ? "address-error" : undefined}
-              {...register("address")}
-            />
-            {errors.address && (
-              <p id="address-error" className="text-destructive text-sm">
-                {errors.address.message}
-              </p>
-            )}
-          </div>
-
-          {/* Date of birth */}
-          <div className="space-y-2">
-            <Label htmlFor="dayOfBirth">Date of birth</Label>
-            <Input
-              id="dayOfBirth"
-              type="date"
-              autoComplete="bday"
-              aria-invalid={!!errors.dayOfBirth}
-              aria-describedby={errors.dayOfBirth ? "dayOfBirth-error" : undefined}
-              {...register("dayOfBirth")}
-            />
-            {errors.dayOfBirth && (
-              <p id="dayOfBirth-error" className="text-destructive text-sm">
-                {errors.dayOfBirth.message}
               </p>
             )}
           </div>
