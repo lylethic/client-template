@@ -20,7 +20,7 @@ import {
 } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { login } from "@/modules/auth/auth.service";
+import { getMe, login } from "@/modules/auth/auth.service";
 
 // ─── Schema ───────────────────────────────────────────────────────────────────
 
@@ -35,7 +35,7 @@ type LoginFormValues = z.infer<typeof loginSchema>;
 
 export default function LoginPage() {
   const router = useRouter();
-  const setUser = useAuthStore((s) => s.setUser);
+  const { setTokens, setUser } = useAuthStore();
 
   const {
     register,
@@ -47,13 +47,18 @@ export default function LoginPage() {
 
   const onSubmit = async (values: LoginFormValues) => {
     try {
-      const { user, accessToken } = await login(values);
-      setUser(user, accessToken);
+      // 1. Get tokens
+      const tokens = await login(values);
+      setTokens(tokens.access_token, tokens.refresh_token);
+
+      // 2. Fetch user profile
+      const user = await getMe();
+      setUser(user, tokens.access_token);
+
       toast.success("Đăng nhập thành công!");
 
-      // Role-based redirect
-      const isAdminOrStaff = user.roles.includes("ADMIN") || user.roles.includes("STAFF");
-      router.replace(isAdminOrStaff ? "/admin" : "/dashboard");
+      // 3. Redirect — Luôn chuyển hướng vào trang Dashboard chính
+      router.replace("/dashboard");
     } catch {
       // Errors are already toasted by the api-client response interceptor
     }
