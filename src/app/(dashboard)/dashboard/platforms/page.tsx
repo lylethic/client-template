@@ -1,6 +1,7 @@
 "use client";
 
 import * as React from "react";
+import { useTranslations } from "next-intl";
 import { AlertTriangle, CheckCircle, Radio, RefreshCw, Trash2 } from "lucide-react";
 import { toast } from "sonner";
 
@@ -23,6 +24,9 @@ const PLATFORM_COLORS: Record<string, string> = {
 };
 
 export default function PlatformsPage() {
+  const t = useTranslations("platforms");
+  const tCommon = useTranslations("common");
+
   const { data: accounts, isLoading, refetch } = usePlatformAccounts();
   const deleteMutation = useDeletePlatformAccount();
   const syncMutation = useSyncPlatformAccount();
@@ -53,18 +57,14 @@ export default function PlatformsPage() {
       {/* Header */}
       <div className="border-border/80 flex flex-col gap-4 border-b pb-5 sm:flex-row sm:items-center sm:justify-between">
         <div>
-          <h1 className="text-xl font-bold tracking-tight sm:text-2xl">
-            Quản Lý Kênh & Nền Tảng MXH
-          </h1>
-          <p className="text-muted-foreground mt-1 text-sm">
-            Kết nối và quản lý ủy quyền API cho YouTube, Facebook Fanpage, Instagram và Threads
-          </p>
+          <h1 className="text-xl font-bold tracking-tight sm:text-2xl">{t("title")}</h1>
+          <p className="text-muted-foreground mt-1 text-sm">{t("description")}</p>
         </div>
 
         <ConnectPlatformDialog />
       </div>
 
-      {/* Danh sách tài khoản đã kết nối */}
+      {/* Connected accounts list */}
       {isLoading ? (
         <div className="grid gap-3 sm:grid-cols-2">
           {[1, 2, 3, 4].map((i) => (
@@ -77,13 +77,8 @@ export default function PlatformsPage() {
             <div className="bg-muted text-muted-foreground mx-auto flex size-12 items-center justify-center rounded-full">
               <Radio className="size-6" />
             </div>
-            <h3 className="text-foreground text-base font-semibold">
-              Chưa có kênh nào được kết nối
-            </h3>
-            <p className="text-muted-foreground mx-auto max-w-md text-xs">
-              Liên kết tài khoản YouTube hoặc Facebook Fanpage của bạn để bắt đầu tự động đồng bộ số
-              liệu, phân tích tăng trưởng và xuất báo cáo.
-            </p>
+            <h3 className="text-foreground text-base font-semibold">{t("noAccounts")}</h3>
+            <p className="text-muted-foreground mx-auto max-w-md text-xs">{t("noAccountsDesc")}</p>
             <div className="pt-2">
               <ConnectPlatformDialog />
             </div>
@@ -131,25 +126,26 @@ export default function PlatformsPage() {
                         </div>
 
                         <p className="text-muted-foreground truncate text-xs">
-                          ID / Handle: {acc.account_handle ?? acc.platform_account_id}
+                          {t("idHandle")} {acc.account_handle ?? acc.platform_account_id}
                         </p>
 
                         <div className="flex flex-wrap items-center gap-2 pt-0.5 text-[11px]">
                           {isExpired ? (
                             <span className="flex items-center gap-1 font-medium text-rose-600 dark:text-rose-400">
-                              <AlertTriangle className="size-3 shrink-0" /> Token đã hết hạn
+                              <AlertTriangle className="size-3 shrink-0" /> {tCommon("expired")}
                             </span>
                           ) : acc.is_active ? (
                             <span className="flex items-center gap-1 font-medium text-emerald-600 dark:text-emerald-400">
-                              <CheckCircle className="size-3 shrink-0" /> Đang hoạt động
+                              <CheckCircle className="size-3 shrink-0" /> {tCommon("active")}
                             </span>
                           ) : (
-                            <span className="text-muted-foreground">Tạm ngưng</span>
+                            <span className="text-muted-foreground">{tCommon("inactive")}</span>
                           )}
 
                           {acc.token_expires_at && (
                             <span className="text-muted-foreground">
-                              · Hạn: {new Date(acc.token_expires_at).toLocaleDateString()}
+                              · {t("tokenExpires")}{" "}
+                              {new Date(acc.token_expires_at).toLocaleDateString()}
                             </span>
                           )}
                         </div>
@@ -167,7 +163,7 @@ export default function PlatformsPage() {
                         <RefreshCw
                           className={`size-3 ${syncMutation.isPending ? "animate-spin" : ""}`}
                         />
-                        Đồng bộ
+                        {syncMutation.isPending ? tCommon("syncing") : tCommon("sync")}
                       </Button>
                       <Button
                         variant="ghost"
@@ -175,13 +171,13 @@ export default function PlatformsPage() {
                         className="h-8 flex-1 justify-center gap-1 text-xs text-rose-600 hover:bg-rose-50 hover:text-rose-700 sm:flex-initial dark:hover:bg-rose-950/30"
                         disabled={deleteMutation.isPending}
                         onClick={() => {
-                          if (confirm(`Bạn có chắc muốn hủy kết nối kênh "${acc.account_name}"?`)) {
+                          if (confirm(t("disconnectConfirm", { name: acc.account_name }))) {
                             deleteMutation.mutate(acc.id);
                           }
                         }}
                       >
                         <Trash2 className="size-3" />
-                        Hủy
+                        {t("disconnect")}
                       </Button>
                     </div>
                   </div>
@@ -192,25 +188,15 @@ export default function PlatformsPage() {
         </div>
       )}
 
-      {/* Hướng dẫn kết nối thêm */}
+      {/* Platform connection guide */}
       <Card className="border-border/70 bg-muted/20 shadow-xs">
         <CardHeader className="pb-2">
-          <CardTitle className="text-sm font-semibold">Hướng Dẫn Kết Nối Các Nền Tảng</CardTitle>
-          <CardDescription className="text-xs">
-            Hệ thống hỗ trợ 2 cơ chế kết nối linh hoạt
-          </CardDescription>
+          <CardTitle className="text-sm font-semibold">{t("guideTitle")}</CardTitle>
+          <CardDescription className="text-xs">{t("guideDesc")}</CardDescription>
         </CardHeader>
         <CardContent className="text-muted-foreground space-y-2 text-xs">
-          <p>
-            <strong className="text-foreground">1. Kết nối qua OAuth 2.0 (Khuyên dùng):</strong>{" "}
-            Cung cấp đầy đủ quyền truy cập để hệ thống cào tự động video, reel, bài viết riêng tư và
-            toàn bộ bình luận phục vụ phân tích sắc thái AI.
-          </p>
-          <p>
-            <strong className="text-foreground">2. Kết nối bằng ID công khai:</strong> Áp dụng cho
-            YouTube (nhập Channel ID) và Facebook (nhập Fanpage ID) mà không cần đăng nhập tài khoản
-            sở hữu.
-          </p>
+          <p>{t("guideOauth")}</p>
+          <p>{t("guidePublic")}</p>
         </CardContent>
       </Card>
     </div>

@@ -1,6 +1,7 @@
 "use client";
 
 import * as React from "react";
+import { useTranslations } from "next-intl";
 import { AlertTriangle, Bot, CheckCircle2, Clock, Flame, Lightbulb, Sparkles } from "lucide-react";
 
 import { useContentRecommendations, useExecutiveSummary } from "@/hooks/use-ai";
@@ -15,17 +16,20 @@ import {
 } from "@/components/ui/select";
 import { Skeleton } from "@/components/ui/skeleton";
 
-const PLATFORM_OPTIONS = [
-  { value: "all", label: "Tất cả nền tảng" },
-  { value: "youtube", label: "YouTube" },
-  { value: "facebook", label: "Facebook" },
-  { value: "instagram", label: "Instagram" },
-  { value: "threads", label: "Threads" },
-];
-
 export default function AIInsightsPage() {
+  const t = useTranslations("ai");
+  const tCommon = useTranslations("common");
+
   const [platform, setPlatform] = React.useState<string | undefined>(undefined);
   const [timeframe, setTimeframe] = React.useState(30);
+
+  const platformOptions = [
+    { value: "all", label: tCommon("allPlatforms") },
+    { value: "youtube", label: "YouTube" },
+    { value: "facebook", label: "Facebook" },
+    { value: "instagram", label: "Instagram" },
+    { value: "threads", label: "Threads" },
+  ];
 
   const { data: recommendations, isLoading: recLoading } = useContentRecommendations(platform);
   const { data: summary, isLoading: summaryLoading } = useExecutiveSummary(timeframe);
@@ -37,11 +41,9 @@ export default function AIInsightsPage() {
         <div>
           <h1 className="flex items-center gap-2 text-xl font-bold tracking-tight sm:text-2xl">
             <Sparkles className="size-6 text-amber-500" />
-            Trung Tâm Phân Tích & Chiến Lược AI
+            {t("title")}
           </h1>
-          <p className="text-muted-foreground mt-1 text-sm">
-            Trích xuất insight sâu sắc từ dữ liệu và khuyến nghị nội dung phù hợp cho khán giả
-          </p>
+          <p className="text-muted-foreground mt-1 text-sm">{t("description")}</p>
         </div>
 
         <div className="grid w-full grid-cols-2 gap-2 sm:flex sm:w-auto sm:items-center">
@@ -53,7 +55,7 @@ export default function AIInsightsPage() {
               <SelectValue />
             </SelectTrigger>
             <SelectContent>
-              {PLATFORM_OPTIONS.map((o) => (
+              {platformOptions.map((o) => (
                 <SelectItem key={o.value} value={o.value} className="text-xs">
                   {o.label}
                 </SelectItem>
@@ -67,13 +69,13 @@ export default function AIInsightsPage() {
             </SelectTrigger>
             <SelectContent>
               <SelectItem value="7" className="text-xs">
-                7 ngày qua
+                {tCommon("time7d")}
               </SelectItem>
               <SelectItem value="30" className="text-xs">
-                30 ngày qua
+                {tCommon("time30d")}
               </SelectItem>
               <SelectItem value="90" className="text-xs">
-                90 ngày qua
+                {tCommon("time90d")}
               </SelectItem>
             </SelectContent>
           </Select>
@@ -88,12 +90,9 @@ export default function AIInsightsPage() {
               <Bot className="size-4" />
             </div>
             <div>
-              <CardTitle className="text-sm font-semibold">
-                Bản Tóm Tắt Điều Hành (Executive Summary)
-              </CardTitle>
+              <CardTitle className="text-sm font-semibold">{t("execSummaryTitle")}</CardTitle>
               <CardDescription className="text-xs">
-                Tổng hợp góc nhìn toàn cảnh về tương tác và xu hướng khán giả trong {timeframe} ngày
-                qua
+                {t("execSummaryDesc", { timeframe })}
               </CardDescription>
             </div>
           </div>
@@ -120,7 +119,7 @@ export default function AIInsightsPage() {
                   <div className="space-y-2 rounded-lg border border-emerald-500/30 bg-emerald-500/5 p-3.5">
                     <p className="flex items-center gap-1.5 text-xs font-semibold text-emerald-700 dark:text-emerald-400">
                       <CheckCircle2 className="size-4" />
-                      Điểm sáng tăng trưởng:
+                      {t("growthHighlights")}
                     </p>
                     <ul className="text-foreground space-y-1.5 text-xs">
                       {summary.top_highlights.map((h, i) => (
@@ -137,7 +136,7 @@ export default function AIInsightsPage() {
                   <div className="space-y-2 rounded-lg border border-amber-500/30 bg-amber-500/5 p-3.5">
                     <p className="flex items-center gap-1.5 text-xs font-semibold text-amber-700 dark:text-amber-400">
                       <AlertTriangle className="size-4" />
-                      Điểm cần lưu ý & Rủi ro:
+                      {t("concernsRisks")}
                     </p>
                     <ul className="text-foreground space-y-1.5 text-xs">
                       {summary.key_concerns_or_risks.map((c, i) => (
@@ -152,23 +151,21 @@ export default function AIInsightsPage() {
               </div>
             </div>
           ) : (
-            <p className="text-muted-foreground py-4 text-xs">Chưa có dữ liệu tóm tắt.</p>
+            <p className="text-muted-foreground py-4 text-xs">{t("noSummaryData")}</p>
           )}
         </CardContent>
       </Card>
 
       {/* ── 2. Content Recommendations Grid ─────────────────────────────────── */}
       <div className="grid gap-6 lg:grid-cols-2">
-        {/* Khung giờ vàng đăng bài */}
+        {/* Best Posting Times */}
         <Card className="border-border/70 shadow-xs">
           <CardHeader className="pb-3">
             <CardTitle className="flex items-center gap-2 text-sm font-semibold">
               <Clock className="size-4 text-blue-600 dark:text-blue-400" />
-              Khung Giờ Đăng Bài Tối Ưu (Best Posting Times)
+              {t("bestTimesTitle")}
             </CardTitle>
-            <CardDescription className="text-xs">
-              Thời điểm người xem tương tác mạnh nhất dựa trên dữ liệu lịch sử
-            </CardDescription>
+            <CardDescription className="text-xs">{t("bestTimesDesc")}</CardDescription>
           </CardHeader>
           <CardContent className="space-y-3">
             {recLoading ? (
@@ -201,23 +198,19 @@ export default function AIInsightsPage() {
                 </div>
               ))
             ) : (
-              <p className="text-muted-foreground py-4 text-xs">
-                Chưa đủ dữ liệu để tính toán khung giờ vàng.
-              </p>
+              <p className="text-muted-foreground py-4 text-xs">{t("noBestTimes")}</p>
             )}
           </CardContent>
         </Card>
 
-        {/* Xu hướng chủ đề thịnh hành */}
+        {/* Trending Topics */}
         <Card className="border-border/70 shadow-xs">
           <CardHeader className="pb-3">
             <CardTitle className="flex items-center gap-2 text-sm font-semibold">
               <Flame className="size-4 text-orange-500" />
-              Chủ Đề Đang Thịnh Hành (Trending Topics)
+              {t("trendingTitle")}
             </CardTitle>
-            <CardDescription className="text-xs">
-              Các chủ đề có tiềm năng viral và được khán giả hỏi nhiều nhất
-            </CardDescription>
+            <CardDescription className="text-xs">{t("trendingDesc")}</CardDescription>
           </CardHeader>
           <CardContent className="space-y-3">
             {recLoading ? (
@@ -242,20 +235,20 @@ export default function AIInsightsPage() {
                 </div>
               ))
             ) : (
-              <p className="text-muted-foreground py-4 text-xs">Chưa có chủ đề nổi bật ghi nhận.</p>
+              <p className="text-muted-foreground py-4 text-xs">{t("noTrending")}</p>
             )}
           </CardContent>
         </Card>
       </div>
 
-      {/* ── 3. Danh sách hành động khuyến nghị ──────────────────────────────── */}
+      {/* ── 3. Actionable Recommendations ───────────────────────────────────── */}
       {recommendations?.actionable_recommendations &&
         recommendations.actionable_recommendations.length > 0 && (
           <Card className="border-border/70 shadow-xs">
             <CardHeader className="pb-3">
               <CardTitle className="flex items-center gap-2 text-sm font-semibold">
                 <Lightbulb className="size-4 text-amber-500" />
-                Hành Động Khuyến Nghị Cần Thực Hiện
+                {t("actionableTitle")}
               </CardTitle>
             </CardHeader>
             <CardContent>
