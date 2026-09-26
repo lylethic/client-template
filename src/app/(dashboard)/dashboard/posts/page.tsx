@@ -1,6 +1,6 @@
 "use client";
 
-import * as React from "react";
+import { useState } from "react";
 import { useTranslations } from "next-intl";
 import {
   ExternalLink,
@@ -39,13 +39,14 @@ export default function PostsPage() {
   const t = useTranslations("posts");
   const tCommon = useTranslations("common");
 
-  const [platform, setPlatform] = React.useState<string | undefined>(undefined);
-  const [postType, setPostType] = React.useState<string | undefined>(undefined);
-  const [page, setPage] = React.useState(1);
+  const [platform, setPlatform] = useState<string | undefined>(undefined);
+  const [postType, setPostType] = useState<string | undefined>(undefined);
+  const [page, setPage] = useState(1);
 
   const platformOptions = [
     { value: "all", label: tCommon("allPlatforms") },
     { value: "youtube", label: "YouTube" },
+    { value: "tiktok", label: "TikTok" },
     { value: "facebook", label: "Facebook" },
     { value: "instagram", label: "Instagram" },
     { value: "threads", label: "Threads" },
@@ -227,7 +228,7 @@ export default function PostsPage() {
                             <Button
                               variant="outline"
                               size="sm"
-                              className="h-7 w-full justify-center gap-1.5 text-xs text-amber-600 shadow-2xs hover:text-amber-700 sm:w-auto dark:text-amber-400"
+                              className="h-7 w-full cursor-pointer justify-center gap-1.5 text-xs text-amber-600 shadow-2xs hover:text-amber-700 sm:w-auto dark:text-amber-400"
                             >
                               <Sparkles className="size-3.5" />
                               {t("analyzeSentimentBtn")}

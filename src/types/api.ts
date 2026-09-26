@@ -8,7 +8,7 @@
 export interface PlatformAccountResponse {
   id: string;
   user_id: string;
-  platform: string; // "youtube" | "facebook" | "instagram" | "threads"
+  platform: string; // "youtube" | "facebook" | "instagram" | "threads" | "tiktok"
   platform_account_id: string;
   account_name: string;
   account_handle: string | null;

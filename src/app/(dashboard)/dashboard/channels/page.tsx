@@ -26,6 +26,7 @@ function formatNumber(n: number): string {
 const PLATFORM_OPTIONS = [
   { value: "all", label: "All Platforms" },
   { value: "youtube", label: "YouTube" },
+  { value: "tiktok", label: "TikTok" },
   { value: "facebook", label: "Facebook" },
   { value: "instagram", label: "Instagram" },
   { value: "threads", label: "Threads" },
@@ -33,6 +34,7 @@ const PLATFORM_OPTIONS = [
 
 const PLATFORM_COLORS: Record<string, string> = {
   youtube: "bg-red-500",
+  tiktok: "bg-black dark:bg-zinc-800",
   facebook: "bg-blue-600",
   instagram: "bg-pink-500",
   threads: "bg-neutral-800",

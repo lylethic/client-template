@@ -17,6 +17,7 @@ export const apiClient = axios.create({
   baseURL: env.NEXT_PUBLIC_API_BASE_URL,
   headers: {
     "Content-Type": "application/json",
+    "ngrok-skip-browser-warning": "true",
   },
   timeout: 30000,
 });
@@ -24,6 +25,7 @@ export const apiClient = axios.create({
 // ─── Request Interceptor ─────────────────────────────────────────────────────
 apiClient.interceptors.request.use(
   (config) => {
+    config.headers.set("ngrok-skip-browser-warning", "true");
     // Inject Bearer token if available
     const token = typeof window !== "undefined" ? localStorage.getItem("access_token") : null;
     if (token) {
@@ -85,9 +87,17 @@ apiClient.interceptors.response.use(
 
       if (refreshToken) {
         try {
-          const { data } = await axios.post(`${env.NEXT_PUBLIC_API_BASE_URL}/api/v1/auth/refresh`, {
-            refresh_token: refreshToken,
-          });
+          const { data } = await axios.post(
+            `${env.NEXT_PUBLIC_API_BASE_URL}/api/v1/auth/refresh`,
+            {
+              refresh_token: refreshToken,
+            },
+            {
+              headers: {
+                "ngrok-skip-browser-warning": "true",
+              },
+            },
+          );
           const newAccessToken: string = data.access_token;
           localStorage.setItem("access_token", newAccessToken);
           if (data.refresh_token) {

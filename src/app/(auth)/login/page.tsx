@@ -1,5 +1,6 @@
 "use client";
 
+import { useEffect } from "react";
 import { useForm } from "react-hook-form";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
@@ -9,6 +10,7 @@ import { toast } from "sonner";
 import { z } from "zod";
 
 import { useAuthStore } from "@/stores/auth.store";
+import { GoogleSignInButton } from "@/components/auth/google-sign-in-button";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -57,12 +59,22 @@ export default function LoginPage() {
 
       toast.success("Đăng nhập thành công!");
 
-      // 3. Redirect — Luôn chuyển hướng vào trang Dashboard chính
+      // 3. Redirect — Always navigate to the main dashboard
       router.replace("/dashboard");
     } catch {
       // Errors are already toasted by the api-client response interceptor
     }
   };
+
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      const params = new URLSearchParams(window.location.search);
+      const error = params.get("error");
+      if (error) {
+        toast.error(`Đăng nhập thất bại: ${error}`);
+      }
+    }
+  }, []);
 
   return (
     <Card>
@@ -73,6 +85,17 @@ export default function LoginPage() {
 
       <form onSubmit={handleSubmit(onSubmit)} noValidate>
         <CardContent className="space-y-4">
+          <GoogleSignInButton mode="signin" />
+
+          <div className="relative my-2">
+            <div className="absolute inset-0 flex items-center">
+              <span className="border-border/80 w-full border-t" />
+            </div>
+            <div className="relative flex justify-center text-xs uppercase">
+              <span className="bg-card text-muted-foreground px-2">Hoặc tiếp tục với email</span>
+            </div>
+          </div>
+
           {/* Email */}
           <div className="space-y-2">
             <Label htmlFor="email">Email</Label>

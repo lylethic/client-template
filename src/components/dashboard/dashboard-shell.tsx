@@ -1,6 +1,6 @@
 "use client";
 
-import * as React from "react";
+import { ReactNode, useEffect, useState } from "react";
 import { useTranslations } from "next-intl";
 import { useTheme } from "next-themes";
 import Link from "next/link";
@@ -8,6 +8,7 @@ import { usePathname } from "next/navigation";
 import { cn } from "cn";
 import { Menu, Moon, Sun, X } from "lucide-react";
 
+import { useMounted } from "@/hooks/use-mounted";
 import { useAuthStore } from "@/stores/auth.store";
 import { LOCALES, useLocaleStore, type Locale } from "@/stores/locale.store";
 import { DashboardSidebar } from "@/components/dashboard/dashboard-sidebar";
@@ -15,11 +16,13 @@ import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 
 interface DashboardShellProps {
-  children: React.ReactNode;
+  children: ReactNode;
 }
 
 export function DashboardShell({ children }: DashboardShellProps) {
-  const [mobileOpen, setMobileOpen] = React.useState(false);
+  const mounted = useMounted();
+
+  const [mobileOpen, setMobileOpen] = useState(false);
   const pathname = usePathname();
   const { theme, setTheme } = useTheme();
   const { locale, setLocale } = useLocaleStore();
@@ -27,15 +30,17 @@ export function DashboardShell({ children }: DashboardShellProps) {
   const tNav = useTranslations("nav");
   const tTheme = useTranslations("theme");
 
+  const currentLocale = mounted ? locale : "vi";
+
   // Close mobile drawer on route change
-  const [prevPathname, setPrevPathname] = React.useState(pathname);
+  const [prevPathname, setPrevPathname] = useState(pathname);
   if (pathname !== prevPathname) {
     setPrevPathname(pathname);
     setMobileOpen(false);
   }
 
   // Handle escape key to close drawer
-  React.useEffect(() => {
+  useEffect(() => {
     if (!mobileOpen) return;
     const handleKeyDown = (e: KeyboardEvent) => {
       if (e.key === "Escape") setMobileOpen(false);
@@ -45,7 +50,7 @@ export function DashboardShell({ children }: DashboardShellProps) {
   }, [mobileOpen]);
 
   // Prevent background scroll when mobile drawer is active
-  React.useEffect(() => {
+  useEffect(() => {
     if (mobileOpen) {
       document.body.style.overflow = "hidden";
     } else {
@@ -56,14 +61,15 @@ export function DashboardShell({ children }: DashboardShellProps) {
     };
   }, [mobileOpen]);
 
-  const initials = user?.full_name
-    ? user.full_name
-        .split(" ")
-        .map((n) => n[0])
-        .join("")
-        .toUpperCase()
-        .slice(0, 2)
-    : (user?.email?.[0]?.toUpperCase() ?? "U");
+  const initials =
+    mounted && user?.full_name
+      ? user.full_name
+          .split(" ")
+          .map((n) => n[0])
+          .join("")
+          .toUpperCase()
+          .slice(0, 2)
+      : (mounted && user?.email?.[0]?.toUpperCase()) || "U";
 
   return (
     <div className="bg-background flex h-screen w-full overflow-hidden">
@@ -147,7 +153,7 @@ export function DashboardShell({ children }: DashboardShellProps) {
                   onClick={() => setLocale(loc as Locale)}
                   className={cn(
                     "rounded px-1.5 py-0.5 uppercase transition-colors",
-                    locale === loc
+                    currentLocale === loc
                       ? "bg-background text-foreground shadow-2xs"
                       : "text-muted-foreground",
                   )}
@@ -165,7 +171,9 @@ export function DashboardShell({ children }: DashboardShellProps) {
               aria-label="User profile"
             >
               <Avatar className="border-border size-7 border">
-                <AvatarFallback className="text-[10px] font-bold">{initials}</AvatarFallback>
+                <AvatarFallback className="text-[10px] font-bold" suppressHydrationWarning>
+                  {initials}
+                </AvatarFallback>
               </Avatar>
             </button>
           </div>

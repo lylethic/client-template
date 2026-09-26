@@ -13,6 +13,7 @@ import {
   connectInstagramAccount,
   connectInstagramOAuth,
   connectThreadsOAuth,
+  connectTikTokOAuth,
   connectYouTubeChannelById,
   connectYouTubeOAuth,
   deletePlatformAccount,
@@ -20,6 +21,7 @@ import {
   getInstagramAuthUrl,
   getPlatformAccount,
   getThreadsAuthUrl,
+  getTikTokAuthUrl,
   getYouTubeAuthUrl,
   listFacebookPages,
   listPlatformAccounts,
@@ -201,6 +203,27 @@ export function useConnectThreadsOAuth() {
     mutationFn: (payload: OAuthCallbackRequest) => connectThreadsOAuth(payload),
     onSuccess: () => {
       toast.success("Threads account connected!");
+      void queryClient.invalidateQueries({ queryKey: platformKeys.all });
+    },
+  });
+}
+
+// ─── TikTok ──────────────────────────────────────────────────────────────────
+
+export function useTikTokAuthUrl(redirectUri?: string) {
+  return useQuery({
+    queryKey: [...platformKeys.all, "tiktok-auth", redirectUri],
+    queryFn: () => getTikTokAuthUrl(redirectUri),
+    enabled: false,
+  });
+}
+
+export function useConnectTikTokOAuth() {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: (payload: OAuthCallbackRequest) => connectTikTokOAuth(payload),
+    onSuccess: () => {
+      toast.success("TikTok account connected!");
       void queryClient.invalidateQueries({ queryKey: platformKeys.all });
     },
   });

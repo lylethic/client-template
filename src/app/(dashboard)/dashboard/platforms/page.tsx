@@ -1,6 +1,6 @@
 "use client";
 
-import * as React from "react";
+import { useEffect } from "react";
 import { useTranslations } from "next-intl";
 import { AlertTriangle, CheckCircle, Radio, RefreshCw, Trash2 } from "lucide-react";
 import { toast } from "sonner";
@@ -18,6 +18,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 
 const PLATFORM_COLORS: Record<string, string> = {
   youtube: "bg-red-500",
+  tiktok: "bg-black dark:bg-zinc-800",
   facebook: "bg-blue-600",
   instagram: "bg-pink-500",
   threads: "bg-neutral-800 dark:bg-neutral-200",
@@ -31,18 +32,19 @@ export default function PlatformsPage() {
   const deleteMutation = useDeletePlatformAccount();
   const syncMutation = useSyncPlatformAccount();
 
-  React.useEffect(() => {
+  useEffect(() => {
     if (typeof window === "undefined") return;
     const params = new URLSearchParams(window.location.search);
     const success = params.get("success");
     const channel = params.get("channel");
     const error = params.get("error");
 
-    if (success === "youtube_connected") {
+    if (success === "youtube_connected" || success === "tiktok_connected") {
+      const platformName = success === "tiktok_connected" ? "TikTok" : "YouTube";
       toast.success(
         channel
-          ? `Kết nối kênh YouTube "${channel}" thành công!`
-          : "Kết nối kênh YouTube thành công!",
+          ? `Kết nối kênh ${platformName} "${channel}" thành công!`
+          : `Kết nối kênh ${platformName} thành công!`,
       );
       refetch();
       window.history.replaceState({}, "", window.location.pathname);
@@ -156,7 +158,7 @@ export default function PlatformsPage() {
                       <Button
                         variant="outline"
                         size="sm"
-                        className="h-8 flex-1 justify-center gap-1 text-xs shadow-2xs sm:flex-initial"
+                        className="h-8 flex-1 cursor-pointer justify-center gap-1 text-xs shadow-2xs sm:flex-initial"
                         disabled={syncMutation.isPending}
                         onClick={() => syncMutation.mutate({ accountId: acc.id })}
                       >
@@ -168,7 +170,7 @@ export default function PlatformsPage() {
                       <Button
                         variant="ghost"
                         size="sm"
-                        className="h-8 flex-1 justify-center gap-1 text-xs text-rose-600 hover:bg-rose-50 hover:text-rose-700 sm:flex-initial dark:hover:bg-rose-950/30"
+                        className="h-8 flex-1 cursor-pointer justify-center gap-1 text-xs text-rose-600 hover:bg-rose-50 hover:text-rose-700 sm:flex-initial dark:hover:bg-rose-950/30"
                         disabled={deleteMutation.isPending}
                         onClick={() => {
                           if (confirm(t("disconnectConfirm", { name: acc.account_name }))) {

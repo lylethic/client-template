@@ -40,3 +40,19 @@ export async function getMe(): Promise<User> {
   const { data } = await apiClient.get<User>("/api/v1/auth/me");
   return data;
 }
+
+/** GET /api/v1/auth/google/url – get Google OAuth consent URL */
+export async function getGoogleAuthUrl(): Promise<{ url: string }> {
+  const { data } = await apiClient.get<{ url: string }>("/api/v1/auth/google/url");
+  return data;
+}
+
+/** POST /api/v1/auth/google – authenticate with Google code or ID token */
+export async function googleLogin(body: {
+  code?: string;
+  id_token?: string;
+  redirect_uri?: string;
+}): Promise<TokenResponse> {
+  const { data } = await apiClient.post<TokenResponse>("/api/v1/auth/google", body);
+  return data;
+}

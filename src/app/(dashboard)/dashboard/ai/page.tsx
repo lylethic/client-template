@@ -1,6 +1,6 @@
 "use client";
 
-import * as React from "react";
+import { useState } from "react";
 import { useTranslations } from "next-intl";
 import { AlertTriangle, Bot, CheckCircle2, Clock, Flame, Lightbulb, Sparkles } from "lucide-react";
 
@@ -20,12 +20,13 @@ export default function AIInsightsPage() {
   const t = useTranslations("ai");
   const tCommon = useTranslations("common");
 
-  const [platform, setPlatform] = React.useState<string | undefined>(undefined);
-  const [timeframe, setTimeframe] = React.useState(30);
+  const [platform, setPlatform] = useState<string | undefined>(undefined);
+  const [timeframe, setTimeframe] = useState(30);
 
   const platformOptions = [
     { value: "all", label: tCommon("allPlatforms") },
     { value: "youtube", label: "YouTube" },
+    { value: "tiktok", label: "TikTok" },
     { value: "facebook", label: "Facebook" },
     { value: "instagram", label: "Instagram" },
     { value: "threads", label: "Threads" },

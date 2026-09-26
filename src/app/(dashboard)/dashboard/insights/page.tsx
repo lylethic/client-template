@@ -24,6 +24,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 const PLATFORM_OPTIONS = [
   { value: "all", label: "All Platforms" },
   { value: "youtube", label: "YouTube" },
+  { value: "tiktok", label: "TikTok" },
   { value: "facebook", label: "Facebook" },
   { value: "instagram", label: "Instagram" },
   { value: "threads", label: "Threads" },

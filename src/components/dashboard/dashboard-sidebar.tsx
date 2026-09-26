@@ -1,5 +1,6 @@
 "use client";
 
+import { ElementType } from "react";
 import { useTranslations } from "next-intl";
 import { useTheme } from "next-themes";
 import Link from "next/link";
@@ -24,13 +25,21 @@ import {
 } from "lucide-react";
 import { toast } from "sonner";
 
+import { useMounted } from "@/hooks/use-mounted";
 import { useAuthStore } from "@/stores/auth.store";
-import { LOCALE_LABELS, LOCALES, useLocaleStore, type Locale } from "@/stores/locale.store";
+import {
+  DEFAULT_LOCALE,
+  LOCALE_LABELS,
+  LOCALES,
+  useLocaleStore,
+  type Locale,
+} from "@/stores/locale.store";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
   DropdownMenuContent,
+  DropdownMenuGroup,
   DropdownMenuItem,
   DropdownMenuLabel,
   DropdownMenuSeparator,
@@ -43,7 +52,7 @@ import { Separator } from "@/components/ui/separator";
 interface NavItemConfig {
   href: string;
   key: "dashboard" | "channels" | "posts" | "platforms" | "insights" | "ai" | "reports";
-  icon: React.ElementType;
+  icon: ElementType;
 }
 
 const NAV_CONFIG: NavItemConfig[] = [
@@ -65,6 +74,8 @@ export interface DashboardSidebarProps {
 }
 
 export function DashboardSidebar({ className, onNavigate, onClose }: DashboardSidebarProps = {}) {
+  const mounted = useMounted();
+
   const tNav = useTranslations("nav");
   const tTheme = useTranslations("theme");
   const tLang = useTranslations("language");
@@ -75,20 +86,24 @@ export function DashboardSidebar({ className, onNavigate, onClose }: DashboardSi
   const { theme, setTheme } = useTheme();
   const { locale, setLocale } = useLocaleStore();
 
+  const currentTheme = mounted ? theme : undefined;
+  const currentLocale = mounted ? locale : DEFAULT_LOCALE;
+
   const handleLogout = () => {
     clearAuth();
     toast.success(tNav("logout"));
     router.replace("/login");
   };
 
-  const initials = user?.full_name
-    ? user.full_name
-        .split(" ")
-        .map((n) => n[0])
-        .join("")
-        .toUpperCase()
-        .slice(0, 2)
-    : (user?.email?.[0]?.toUpperCase() ?? "U");
+  const initials =
+    mounted && user?.full_name
+      ? user.full_name
+          .split(" ")
+          .map((n) => n[0])
+          .join("")
+          .toUpperCase()
+          .slice(0, 2)
+      : (mounted && user?.email?.[0]?.toUpperCase()) || "U";
 
   return (
     <aside className={cn("bg-card flex h-full w-64 flex-col border-r shadow-2xs", className)}>
@@ -168,7 +183,7 @@ export function DashboardSidebar({ className, onNavigate, onClose }: DashboardSi
         {/* Theme mode quick toggle */}
         <div className="flex items-center gap-1">
           <Button
-            variant={theme === "light" ? "secondary" : "ghost"}
+            variant={currentTheme === "light" ? "secondary" : "ghost"}
             size="icon"
             className="size-7 rounded-md"
             title={tTheme("light")}
@@ -177,7 +192,7 @@ export function DashboardSidebar({ className, onNavigate, onClose }: DashboardSi
             <Sun className="size-3.5" />
           </Button>
           <Button
-            variant={theme === "dark" ? "secondary" : "ghost"}
+            variant={currentTheme === "dark" ? "secondary" : "ghost"}
             size="icon"
             className="size-7 rounded-md"
             title={tTheme("dark")}
@@ -186,7 +201,7 @@ export function DashboardSidebar({ className, onNavigate, onClose }: DashboardSi
             <Moon className="size-3.5" />
           </Button>
           <Button
-            variant={theme === "system" ? "secondary" : "ghost"}
+            variant={currentTheme === "system" ? "secondary" : "ghost"}
             size="icon"
             className="size-7 rounded-md"
             title={tTheme("system")}
@@ -205,7 +220,7 @@ export function DashboardSidebar({ className, onNavigate, onClose }: DashboardSi
               onClick={() => setLocale(loc as Locale)}
               className={cn(
                 "rounded px-2 py-0.5 text-[11px] font-bold uppercase transition-all",
-                locale === loc
+                currentLocale === loc
                   ? "bg-background text-foreground shadow-2xs"
                   : "text-muted-foreground hover:text-foreground",
               )}
@@ -230,79 +245,95 @@ export function DashboardSidebar({ className, onNavigate, onClose }: DashboardSi
             }
           >
             <Avatar className="border-border size-9 border">
-              <AvatarFallback className="text-xs font-bold">{initials}</AvatarFallback>
+              <AvatarFallback className="text-xs font-bold" suppressHydrationWarning>
+                {initials}
+              </AvatarFallback>
             </Avatar>
             <div className="min-w-0 flex-1">
-              <p className="text-foreground truncate text-sm leading-tight font-semibold">
-                {user?.full_name ?? user?.email}
+              <p
+                className="text-foreground truncate text-sm leading-tight font-semibold"
+                suppressHydrationWarning
+              >
+                {mounted ? (user?.full_name ?? user?.email) : ""}
               </p>
-              <p className="text-muted-foreground mt-0.5 truncate text-xs">{user?.email}</p>
+              <p className="text-muted-foreground mt-0.5 truncate text-xs" suppressHydrationWarning>
+                {mounted ? user?.email : ""}
+              </p>
             </div>
           </DropdownMenuTrigger>
 
           <DropdownMenuContent align="end" side="top" className="w-56 space-y-1 p-1.5">
             <div className="px-2.5 py-2">
-              <p className="text-foreground truncate text-xs font-semibold">
-                {user?.full_name ?? "Người dùng"}
+              <p
+                className="text-foreground truncate text-xs font-semibold"
+                suppressHydrationWarning
+              >
+                {mounted ? (user?.full_name ?? "Người dùng") : "Người dùng"}
               </p>
-              <p className="text-muted-foreground truncate text-[11px]">{user?.email}</p>
+              <p className="text-muted-foreground truncate text-[11px]" suppressHydrationWarning>
+                {mounted ? user?.email : ""}
+              </p>
             </div>
 
             <DropdownMenuSeparator />
 
             {/* Theme Mode Option Group */}
-            <DropdownMenuLabel className="text-muted-foreground px-2.5 text-[11px] font-bold tracking-wider uppercase">
-              {tTheme("theme")}
-            </DropdownMenuLabel>
-            <div className="grid grid-cols-3 gap-1 px-1 py-1">
-              <Button
-                variant={theme === "light" ? "default" : "outline"}
-                size="sm"
-                className="h-7 gap-1 px-1 text-xs"
-                onClick={() => setTheme("light")}
-              >
-                <Sun className="size-3" />
-                {tTheme("light")}
-              </Button>
-              <Button
-                variant={theme === "dark" ? "default" : "outline"}
-                size="sm"
-                className="h-7 gap-1 px-1 text-xs"
-                onClick={() => setTheme("dark")}
-              >
-                <Moon className="size-3" />
-                {tTheme("dark")}
-              </Button>
-              <Button
-                variant={theme === "system" ? "default" : "outline"}
-                size="sm"
-                className="h-7 gap-1 px-1 text-xs"
-                onClick={() => setTheme("system")}
-              >
-                <Laptop className="size-3" />
-                Auto
-              </Button>
-            </div>
+            <DropdownMenuGroup>
+              <DropdownMenuLabel className="text-muted-foreground px-2.5 text-[11px] font-bold tracking-wider uppercase">
+                {tTheme("theme")}
+              </DropdownMenuLabel>
+              <div className="grid grid-cols-3 gap-1 px-1 py-1">
+                <Button
+                  variant={currentTheme === "light" ? "default" : "outline"}
+                  size="sm"
+                  className="h-7 gap-1 px-1 text-xs"
+                  onClick={() => setTheme("light")}
+                >
+                  <Sun className="size-3" />
+                  {tTheme("light")}
+                </Button>
+                <Button
+                  variant={currentTheme === "dark" ? "default" : "outline"}
+                  size="sm"
+                  className="h-7 gap-1 px-1 text-xs"
+                  onClick={() => setTheme("dark")}
+                >
+                  <Moon className="size-3.5" />
+                  {tTheme("dark")}
+                </Button>
+                <Button
+                  variant={currentTheme === "system" ? "default" : "outline"}
+                  size="sm"
+                  className="h-7 gap-1 px-1 text-xs"
+                  onClick={() => setTheme("system")}
+                >
+                  <Laptop className="size-3" />
+                  Auto
+                </Button>
+              </div>
+            </DropdownMenuGroup>
 
             <DropdownMenuSeparator />
 
             {/* Language Option Group */}
-            <DropdownMenuLabel className="text-muted-foreground px-2.5 text-[11px] font-bold tracking-wider uppercase">
-              {tLang("language")}
-            </DropdownMenuLabel>
-            {LOCALES.map((loc) => (
-              <DropdownMenuItem
-                key={loc}
-                onClick={() => setLocale(loc as Locale)}
-                className="flex cursor-pointer items-center justify-between px-2.5 py-1.5 text-xs"
-              >
-                <span className="flex items-center gap-2">
-                  <Globe className="text-muted-foreground size-3.5" />
-                  {LOCALE_LABELS[loc as Locale]}
-                </span>
-                {locale === loc && <Check className="text-primary size-3.5" />}
-              </DropdownMenuItem>
-            ))}
+            <DropdownMenuGroup>
+              <DropdownMenuLabel className="text-muted-foreground px-2.5 text-[11px] font-bold tracking-wider uppercase">
+                {tLang("language")}
+              </DropdownMenuLabel>
+              {LOCALES.map((loc) => (
+                <DropdownMenuItem
+                  key={loc}
+                  onClick={() => setLocale(loc as Locale)}
+                  className="flex cursor-pointer items-center justify-between px-2.5 py-1.5 text-xs"
+                >
+                  <span className="flex items-center gap-2">
+                    <Globe className="text-muted-foreground size-3.5" />
+                    {LOCALE_LABELS[loc as Locale]}
+                  </span>
+                  {locale === loc && <Check className="text-primary size-3.5" />}
+                </DropdownMenuItem>
+              ))}
+            </DropdownMenuGroup>
 
             <DropdownMenuSeparator />
 

@@ -9,6 +9,7 @@ import { toast } from "sonner";
 import { z } from "zod";
 
 import { useAuthStore } from "@/stores/auth.store";
+import { GoogleSignInButton } from "@/components/auth/google-sign-in-button";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -84,6 +85,17 @@ export default function RegisterPage() {
 
       <form onSubmit={handleSubmit(onSubmit)} noValidate>
         <CardContent className="space-y-4">
+          <GoogleSignInButton mode="signup" />
+
+          <div className="relative my-2">
+            <div className="absolute inset-0 flex items-center">
+              <span className="border-border/80 w-full border-t" />
+            </div>
+            <div className="relative flex justify-center text-xs uppercase">
+              <span className="bg-card text-muted-foreground px-2">Hoặc đăng ký bằng email</span>
+            </div>
+          </div>
+
           {/* Full name */}
           <div className="space-y-2">
             <Label htmlFor="full_name">Full name</Label>

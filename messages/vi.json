@@ -99,17 +99,17 @@
   },
   "platforms": {
     "title": "Quản Lý Kênh & Nền Tảng MXH",
-    "description": "Kết nối và quản lý ủy quyền API cho YouTube, Facebook Fanpage, Instagram và Threads",
+    "description": "Kết nối và quản lý ủy quyền API cho TikTok, YouTube, Facebook Fanpage, Instagram và Threads",
     "connectNew": "Kết nối kênh mới",
     "noAccounts": "Chưa có kênh nào được kết nối",
-    "noAccountsDesc": "Liên kết tài khoản YouTube hoặc Facebook Fanpage của bạn để bắt đầu tự động đồng bộ số liệu, phân tích tăng trưởng và xuất báo cáo.",
+    "noAccountsDesc": "Liên kết tài khoản TikTok, YouTube hoặc Facebook Fanpage của bạn để bắt đầu tự động đồng bộ số liệu, phân tích tăng trưởng và xuất báo cáo.",
     "idHandle": "ID / Handle:",
     "tokenExpires": "Hạn:",
     "disconnect": "Hủy",
     "disconnectConfirm": "Bạn có chắc muốn hủy kết nối kênh \"{name}\"?",
     "guideTitle": "Hướng Dẫn Kết Nối Các Nền Tảng",
     "guideDesc": "Hệ thống hỗ trợ 2 cơ chế kết nối linh hoạt",
-    "guideOauth": "1. Kết nối qua OAuth 2.0 (Khuyên dùng): Cung cấp đầy đủ quyền truy cập để hệ thống cào tự động video, reel, bài viết riêng tư và toàn bộ bình luận phục vụ phân tích sắc thái AI.",
+    "guideOauth": "1. Kết nối qua OAuth 2.0 (Khuyên dùng): Cung cấp đầy đủ quyền truy cập để hệ thống cào tự động video, reel, bài viết riêng tư và toàn bộ bình luận phục vụ phân tích sắc thái AI (TikTok, YouTube, Facebook, Instagram, Threads).",
     "guidePublic": "2. Kết nối bằng ID công khai: Áp dụng cho YouTube (nhập Channel ID) và Facebook (nhập Fanpage ID) mà không cần đăng nhập tài khoản sở hữu."
   },
   "posts": {

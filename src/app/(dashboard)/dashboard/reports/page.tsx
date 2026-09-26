@@ -27,6 +27,7 @@ const TIMEFRAME_OPTIONS: { value: ReportTimeframe; label: string }[] = [
 const PLATFORM_OPTIONS = [
   { value: "all", label: "All Platforms" },
   { value: "youtube", label: "YouTube" },
+  { value: "tiktok", label: "TikTok" },
   { value: "facebook", label: "Facebook" },
   { value: "instagram", label: "Instagram" },
   { value: "threads", label: "Threads" },
@@ -114,7 +115,7 @@ export default function ReportsPage() {
               size="lg"
               onClick={() => handleExport("excel")}
               disabled={loading !== null}
-              className="w-full justify-center gap-2 sm:w-auto"
+              className="w-full cursor-pointer justify-center gap-2 sm:w-auto"
             >
               {loading === "excel" ? (
                 <Loader2 className="size-5 animate-spin" aria-hidden />
@@ -129,7 +130,7 @@ export default function ReportsPage() {
               variant="outline"
               onClick={() => handleExport("pdf")}
               disabled={loading !== null}
-              className="w-full justify-center gap-2 sm:w-auto"
+              className="w-full cursor-pointer justify-center gap-2 sm:w-auto"
             >
               {loading === "pdf" ? (
                 <Loader2 className="size-5 animate-spin" aria-hidden />

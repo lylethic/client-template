@@ -1,6 +1,6 @@
 "use client";
 
-import * as React from "react";
+import { FormEvent, isValidElement, ReactElement, ReactNode, useState } from "react";
 import { Link2, Plus, Radio, RefreshCw } from "lucide-react";
 
 import {
@@ -9,6 +9,7 @@ import {
   useFacebookAuthUrl,
   useInstagramAuthUrl,
   useThreadsAuthUrl,
+  useTikTokAuthUrl,
   useYouTubeAuthUrl,
 } from "@/hooks/use-platforms";
 import { Button } from "@/components/ui/button";
@@ -25,24 +26,27 @@ import { Label } from "@/components/ui/label";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
 interface ConnectPlatformDialogProps {
-  trigger?: React.ReactNode;
-  defaultPlatform?: "youtube" | "facebook" | "instagram" | "threads";
+  trigger?: ReactNode;
+  defaultPlatform?: "youtube" | "tiktok" | "facebook" | "instagram" | "threads";
 }
 
 export function ConnectPlatformDialog({
   trigger,
   defaultPlatform = "youtube",
 }: ConnectPlatformDialogProps) {
-  const [open, setOpen] = React.useState(false);
-  const [activeTab, setActiveTab] = React.useState<string>(defaultPlatform);
+  const [open, setOpen] = useState(false);
+  const [activeTab, setActiveTab] = useState<string>(defaultPlatform);
 
   // YouTube states
-  const [ytChannelId, setYtChannelId] = React.useState("");
+  const [ytChannelId, setYtChannelId] = useState("");
   const connectYtMutation = useConnectYouTubeChannelById();
   const { refetch: fetchYtAuthUrl, isFetching: ytAuthLoading } = useYouTubeAuthUrl();
 
+  // TikTok states
+  const { refetch: fetchTikTokAuthUrl, isFetching: tikTokAuthLoading } = useTikTokAuthUrl();
+
   // Facebook states
-  const [fbPageId, setFbPageId] = React.useState("");
+  const [fbPageId, setFbPageId] = useState("");
   const connectFbPageMutation = useConnectFacebookPage();
   const { refetch: fetchFbAuthUrl, isFetching: fbAuthLoading } = useFacebookAuthUrl();
 
@@ -51,7 +55,7 @@ export function ConnectPlatformDialog({
   const { refetch: fetchThreadsAuthUrl, isFetching: threadsAuthLoading } = useThreadsAuthUrl();
 
   // Handlers
-  const handleConnectYtById = async (e: React.FormEvent) => {
+  const handleConnectYtById = async (e: FormEvent) => {
     e.preventDefault();
     if (!ytChannelId.trim()) return;
     await connectYtMutation.mutateAsync({ channel_id: ytChannelId.trim() });
@@ -68,7 +72,7 @@ export function ConnectPlatformDialog({
     }
   };
 
-  const handleConnectFbPage = async (e: React.FormEvent) => {
+  const handleConnectFbPage = async (e: FormEvent) => {
     e.preventDefault();
     if (!fbPageId.trim()) return;
     await connectFbPageMutation.mutateAsync({ page_id: fbPageId.trim() });
@@ -76,24 +80,27 @@ export function ConnectPlatformDialog({
     setOpen(false);
   };
 
+  let renderTrigger: ReactElement;
+  if (trigger) {
+    renderTrigger = isValidElement(trigger) ? (
+      (trigger as ReactElement)
+    ) : (
+      <Button size="sm" className="cursor-pointer">
+        {trigger}
+      </Button>
+    );
+  } else {
+    renderTrigger = (
+      <Button size="sm" className="cursor-pointer gap-1.5 shadow-xs">
+        <Plus className="size-4" aria-hidden="true" />
+        Kết nối kênh mới
+      </Button>
+    );
+  }
+
   return (
     <Dialog open={open} onOpenChange={setOpen}>
-      <DialogTrigger
-        render={
-          trigger ? (
-            React.isValidElement(trigger) ? (
-              trigger
-            ) : (
-              <Button size="sm">{trigger}</Button>
-            )
-          ) : (
-            <Button size="sm" className="gap-1.5 shadow-xs">
-              <Plus className="size-4" aria-hidden="true" />
-              Kết nối kênh mới
-            </Button>
-          )
-        }
-      />
+      <DialogTrigger render={renderTrigger} />
       <DialogContent className="sm:max-w-md">
         <DialogHeader>
           <DialogTitle>Liên kết tài khoản Mạng Xã Hội</DialogTitle>
@@ -107,9 +114,12 @@ export function ConnectPlatformDialog({
           onValueChange={(val) => setActiveTab(val as string)}
           className="w-full"
         >
-          <TabsList className="mb-4 grid w-full grid-cols-4">
+          <TabsList className="mb-4 grid w-full grid-cols-5">
             <TabsTrigger value="youtube" className="text-xs">
               YouTube
+            </TabsTrigger>
+            <TabsTrigger value="tiktok" className="text-xs">
+              TikTok
             </TabsTrigger>
             <TabsTrigger value="facebook" className="text-xs">
               Facebook
@@ -180,6 +190,31 @@ export function ConnectPlatformDialog({
                 <Link2 className="size-4 text-red-500" />
               )}
               Ủy quyền đầy đủ qua Google OAuth
+            </Button>
+          </TabsContent>
+
+          {/* ── TikTok Tab ── */}
+          <TabsContent value="tiktok" className="space-y-4">
+            <div className="border-border/70 bg-muted/30 space-y-1 rounded-lg border p-3 text-xs">
+              <p className="text-foreground font-semibold">TikTok for Developers (API v2)</p>
+              <p className="text-muted-foreground">
+                Ủy quyền tài khoản TikTok Creator/Business để tự động đồng bộ video, lượt xem, lượt
+                thích và người theo dõi.
+              </p>
+            </div>
+
+            <Button
+              type="button"
+              className="w-full gap-2 text-xs hover:bg-neutral-800 dark:bg-zinc-100 dark:text-zinc-900 dark:hover:bg-zinc-200"
+              disabled={tikTokAuthLoading}
+              onClick={() => handleOAuthRedirect(fetchTikTokAuthUrl)}
+            >
+              {tikTokAuthLoading ? (
+                <RefreshCw className="size-4 animate-spin" />
+              ) : (
+                <Link2 className="size-4" />
+              )}
+              Đăng nhập bằng TikTok (OAuth v2)
             </Button>
           </TabsContent>
 

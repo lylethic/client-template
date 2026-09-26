@@ -99,17 +99,17 @@
   },
   "platforms": {
     "title": "Channels & Platform Management",
-    "description": "Connect and manage API authorization for YouTube, Facebook Fanpage, Instagram, and Threads",
+    "description": "Connect and manage API authorization for TikTok, YouTube, Facebook Fanpage, Instagram, and Threads",
     "connectNew": "Connect New Channel",
     "noAccounts": "No channels connected yet",
-    "noAccountsDesc": "Link your YouTube channel or Facebook Fanpage to start automated metrics synchronization, growth tracking, and reporting.",
+    "noAccountsDesc": "Link your TikTok account, YouTube channel, or Facebook Fanpage to start automated metrics synchronization, growth tracking, and reporting.",
     "idHandle": "ID / Handle:",
     "tokenExpires": "Expires:",
     "disconnect": "Disconnect",
     "disconnectConfirm": "Are you sure you want to disconnect channel \"{name}\"?",
     "guideTitle": "Platform Connection Guide",
     "guideDesc": "Our system supports 2 flexible connection mechanisms",
-    "guideOauth": "1. OAuth 2.0 Authorization (Recommended): Grants full access to scrape videos, reels, private metrics, and audience comments for deep AI sentiment analysis.",
+    "guideOauth": "1. OAuth 2.0 Authorization (Recommended): Grants full access to scrape videos, reels, private metrics, and audience comments for deep AI sentiment analysis (TikTok, YouTube, Facebook, Instagram, Threads).",
     "guidePublic": "2. Public ID Connection: Quickly connect YouTube (via Channel ID) or Facebook (via Fanpage ID) without needing full owner login."
   },
   "posts": {

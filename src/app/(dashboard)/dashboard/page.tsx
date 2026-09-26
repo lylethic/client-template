@@ -1,6 +1,6 @@
 "use client";
 
-import * as React from "react";
+import { useState } from "react";
 import { useTranslations } from "next-intl";
 import Link from "next/link";
 import {
@@ -44,21 +44,22 @@ function formatNumber(n?: number): string {
 
 const PLATFORM_DOT: Record<string, string> = {
   youtube: "bg-red-500",
+  tiktok: "bg-black dark:bg-zinc-200",
   facebook: "bg-blue-600",
   instagram: "bg-pink-500",
   threads: "bg-neutral-800 dark:bg-neutral-200",
 };
 
-type FilterPlatform = "all" | "youtube" | "facebook" | "instagram" | "threads";
+type FilterPlatform = "all" | "youtube" | "tiktok" | "facebook" | "instagram" | "threads";
 
 export default function DashboardOverviewPage() {
   const t = useTranslations("dashboard");
   const tCommon = useTranslations("common");
 
-  const [selectedPlatform, setSelectedPlatform] = React.useState<FilterPlatform>("all");
-  const [selectedTimeframe, setSelectedTimeframe] = React.useState<ReportTimeframe>("30d");
-  const [isExporting, setIsExporting] = React.useState(false);
-  const [isFreshSyncing, setIsFreshSyncing] = React.useState(false);
+  const [selectedPlatform, setSelectedPlatform] = useState<FilterPlatform>("all");
+  const [selectedTimeframe, setSelectedTimeframe] = useState<ReportTimeframe>("30d");
+  const [isExporting, setIsExporting] = useState(false);
+  const [isFreshSyncing, setIsFreshSyncing] = useState(false);
 
   // 1. Data hooks
   const platformParam = selectedPlatform === "all" ? undefined : selectedPlatform;
@@ -138,7 +139,7 @@ export default function DashboardOverviewPage() {
           <p className="text-muted-foreground mt-1 text-xs sm:text-sm">{t("description")}</p>
         </div>
 
-        {/* Nút hành động nhanh: responsive full-width trên mobile */}
+        {/* Quick action buttons: responsive full-width on mobile */}
         <div className="flex w-full items-center gap-2 sm:w-auto sm:gap-2.5">
           <Button
             variant="outline"
@@ -170,13 +171,13 @@ export default function DashboardOverviewPage() {
 
       {/* ── 2. Filter Bar (Platform Tabs & Timeframe Chips) ────────────────── */}
       <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-        {/* Nền tảng: Vuốt ngang mượt mà trên thiết bị di động */}
+        {/* Platforms: Smooth horizontal scrolling on mobile */}
         <div
           className="flex scrollbar-none items-center gap-1.5 overflow-x-auto pb-1 sm:gap-2 sm:pb-0"
           role="tablist"
           aria-label="Channels filter"
         >
-          {(["all", "youtube", "facebook", "instagram", "threads"] as const).map((p) => (
+          {(["all", "youtube", "tiktok", "facebook", "instagram", "threads"] as const).map((p) => (
             <button
               key={p}
               type="button"
@@ -194,7 +195,7 @@ export default function DashboardOverviewPage() {
           ))}
         </div>
 
-        {/* Thời gian */}
+        {/* Timeframe selector */}
         <div className="border-border/70 bg-muted/40 flex w-full justify-between rounded-lg border p-1 sm:inline-flex sm:w-auto">
           {(["7d", "30d", "90d"] as const).map((tf) => (
             <button
@@ -217,7 +218,7 @@ export default function DashboardOverviewPage() {
         </div>
       </div>
 
-      {/* ── 3. KPI Grid (4 Chỉ số vàng) ────────────────────────────────────── */}
+      {/* ── 3. KPI Grid (4 Key Metrics) ────────────────────────────────────── */}
       <section aria-label="KPI Metrics">
         <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
           <StatCard
@@ -260,7 +261,7 @@ export default function DashboardOverviewPage() {
 
       {/* ── 4. AI Strategic Insights & Connected Channels Hub ─────────────── */}
       <div className="grid grid-cols-1 gap-6 lg:grid-cols-3">
-        {/* Khối AI Insights */}
+        {/* AI Strategic Insights Hub */}
         <Card className="border-border/70 shadow-xs lg:col-span-2">
           <CardHeader className="flex flex-row items-center justify-between pb-3">
             <div className="flex items-center gap-2.5">
@@ -341,7 +342,7 @@ export default function DashboardOverviewPage() {
           </CardContent>
         </Card>
 
-        {/* Khối Kênh đã kết nối */}
+        {/* Connected Channels Hub */}
         <Card className="border-border/70 flex flex-col justify-between shadow-xs">
           <div>
             <CardHeader className="flex flex-row items-center justify-between pb-3">

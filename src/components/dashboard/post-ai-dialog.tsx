@@ -1,6 +1,6 @@
 "use client";
 
-import * as React from "react";
+import { isValidElement, ReactElement, ReactNode, useCallback, useState } from "react";
 import { AlertTriangle, MessageSquare, RefreshCw, Sparkles, ThumbsUp } from "lucide-react";
 
 import type { PostAIInsightResponse } from "@/types/api";
@@ -20,16 +20,16 @@ import { Skeleton } from "@/components/ui/skeleton";
 interface PostAiDialogProps {
   postId: string;
   postTitle?: string | null;
-  trigger?: React.ReactNode;
+  trigger?: ReactNode;
 }
 
 export function PostAiDialog({ postId, postTitle, trigger }: PostAiDialogProps) {
-  const [open, setOpen] = React.useState(false);
-  const [analysisData, setAnalysisData] = React.useState<PostAIInsightResponse | null>(null);
+  const [open, setOpen] = useState(false);
+  const [analysisData, setAnalysisData] = useState<PostAIInsightResponse | null>(null);
 
   const analyzeMutation = useAnalyzePost();
 
-  const handleTriggerAnalysis = React.useCallback(async () => {
+  const handleTriggerAnalysis = useCallback(async () => {
     try {
       const data = await analyzeMutation.mutateAsync(postId);
       setAnalysisData(data);
@@ -47,28 +47,29 @@ export function PostAiDialog({ postId, postTitle, trigger }: PostAiDialogProps) 
 
   const sentiment = analysisData?.sentiment_breakdown;
 
+  let renderTrigger: ReactElement;
+  if (trigger) {
+    renderTrigger = isValidElement(trigger) ? (
+      (trigger as ReactElement)
+    ) : (
+      <Button size="sm">{trigger}</Button>
+    );
+  } else {
+    renderTrigger = (
+      <Button
+        variant="ghost"
+        size="sm"
+        className="h-7 cursor-pointer gap-1 px-2 text-amber-600 dark:text-amber-400"
+      >
+        <Sparkles className="size-3.5" aria-hidden="true" />
+        AI Insights
+      </Button>
+    );
+  }
+
   return (
     <Dialog open={open} onOpenChange={handleOpenChange}>
-      <DialogTrigger
-        render={
-          trigger ? (
-            React.isValidElement(trigger) ? (
-              trigger
-            ) : (
-              <button type="button">{trigger}</button>
-            )
-          ) : (
-            <Button
-              variant="ghost"
-              size="sm"
-              className="h-7 gap-1 px-2 text-xs text-amber-600 dark:text-amber-400"
-            >
-              <Sparkles className="size-3.5" aria-hidden="true" />
-              AI Insights
-            </Button>
-          )
-        }
-      />
+      <DialogTrigger render={renderTrigger} />
       <DialogContent className="max-h-[85vh] overflow-y-auto sm:max-w-lg">
         <DialogHeader>
           <div className="flex items-center gap-2">
@@ -96,7 +97,7 @@ export function PostAiDialog({ postId, postTitle, trigger }: PostAiDialogProps) 
           </div>
         ) : analysisData ? (
           <div className="space-y-4 py-2 text-xs">
-            {/* 1. Thanh phân bổ cảm xúc */}
+            {/* 1. Sentiment distribution breakdown */}
             <div className="border-border/70 bg-card space-y-2 rounded-lg border p-3">
               <div className="flex items-center justify-between">
                 <span className="text-foreground flex items-center gap-1.5 font-semibold">
@@ -119,7 +120,7 @@ export function PostAiDialog({ postId, postTitle, trigger }: PostAiDialogProps) 
                 </Badge>
               </div>
 
-              {/* Progress bar đa màu */}
+              {/* Multi-colored progress bar */}
               {sentiment && (
                 <div className="space-y-1.5 pt-1">
                   <div className="bg-muted flex h-2.5 w-full overflow-hidden rounded-full">
@@ -158,7 +159,7 @@ export function PostAiDialog({ postId, postTitle, trigger }: PostAiDialogProps) 
               )}
             </div>
 
-            {/* 2. Chủ đề độc giả quan tâm nhất */}
+            {/* 2. Top reader interests / topics */}
             {analysisData.top_topics && analysisData.top_topics.length > 0 && (
               <div className="space-y-2">
                 <p className="text-foreground font-semibold">Chủ đề thảo luận nổi bật:</p>
@@ -176,7 +177,7 @@ export function PostAiDialog({ postId, postTitle, trigger }: PostAiDialogProps) 
               </div>
             )}
 
-            {/* 3. Tóm tắt phản hồi & Đề xuất hành động */}
+            {/* 3. Feedback summary & actionable recommendations */}
             {analysisData.audience_feedback_summary && (
               <div className="bg-muted/30 space-y-1 rounded-lg p-3">
                 <div className="text-foreground flex items-center gap-1.5 font-semibold">

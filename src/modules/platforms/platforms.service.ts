@@ -179,3 +179,25 @@ export async function connectThreadsOAuth(
   );
   return data;
 }
+
+// ─── TikTok ──────────────────────────────────────────────────────────────────
+
+/** GET /api/v1/platforms/tiktok/authorize */
+export async function getTikTokAuthUrl(redirectUri?: string): Promise<OAuthAuthorizeUrlResponse> {
+  const { data } = await apiClient.get<OAuthAuthorizeUrlResponse>(
+    "/api/v1/platforms/tiktok/authorize",
+    { params: redirectUri ? { redirect_uri: redirectUri } : undefined },
+  );
+  return data;
+}
+
+/** POST /api/v1/platforms/tiktok/callback */
+export async function connectTikTokOAuth(
+  payload: OAuthCallbackRequest,
+): Promise<PlatformAccountResponse> {
+  const { data } = await apiClient.post<PlatformAccountResponse>(
+    "/api/v1/platforms/tiktok/callback",
+    payload,
+  );
+  return data;
+}
