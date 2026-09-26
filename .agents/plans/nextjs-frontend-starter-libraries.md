@@ -1,134 +1,142 @@
-# Danh Sách Thư Viện & Công Nghệ Cho Next.js Frontend Base Starter
+# List of Libraries & Technologies for a Next.js Frontend Base Starter
 
-Tài liệu này tổng hợp danh mục các thư viện và công cụ tiêu chuẩn, module hoá cao để xây dựng một **Frontend Base Template (Boilerplate)** bằng **Next.js (App Router)**. Kiến trúc hướng đến tính tái sử dụng cao cho nhiều dự án khác nhau, dễ dàng cắm rút hoặc mở rộng công nghệ mới mà không ảnh hưởng cấu trúc lõi.
-
----
-
-## 1. Nền Tảng Cốt Lõi (Core Framework & Language)
-
-*   **Next.js (App Router)**: Framework chính tối ưu hóa hiệu năng, hybrid rendering (RSC + Client Components), routing và tối ưu hóa SEO.
-*   **React 19 / 18 & React DOM**: Lõi giao diện người dùng.
-*   **TypeScript**: Bắt buộc để định kiểu chặt chẽ (strict mode), đảm bảo an toàn kiểu dữ liệu xuyên suốt giữa các tầng API, DTO và UI component.
+This document compiles a catalog of standard, highly modular libraries and tools for building a **Frontend Base Template (Boilerplate)** with **Next.js (App Router)**. The architecture is designed for high reusability across different projects, making it easy to plug in, remove, or extend new technologies without affecting the core structure.
 
 ---
 
-## 2. Giao Tiếp Backend & Server State Management
+## 1. Core Framework & Language
 
-Bộ thư viện phục vụ kết nối đa dạng kiến trúc backend (RESTful, GraphQL, SignalR, Push Notification):
+- **Next.js (App Router)**: The main framework, optimized for performance, hybrid rendering (RSC + Client Components), routing, and SEO.
+- **React 19 / 18 & React DOM**: The core UI library.
+- **TypeScript**: Mandatory for strict typing (strict mode), ensuring type safety throughout the API, DTO, and UI component layers.
+
+---
+
+## 2. Backend Communication & Server State Management
+
+A set of libraries for connecting to diverse backend architectures (RESTful, GraphQL, SignalR, Push Notifications):
 
 ### a. RESTful API Client & Data Fetching
-*   **`@tanstack/react-query`**: Quản lý server state, caching, synchronization, optimistic updates, pagination và auto-refetching. Chuẩn công nghiệp cho ứng dụng enterprise.
-*   **`axios`** hoặc **`ky`**: HTTP Client mạnh mẽ, hỗ trợ Interceptors để xử lý Refresh Token tự động, inject Authorization Header, chuẩn hóa mã lỗi (401, 403, 500) và gọi Toast thông báo lỗi toàn cục.
+
+- **`@tanstack/react-query`**: Manages server state, caching, synchronization, optimistic updates, pagination, and auto-refetching. The industry standard for enterprise applications.
+- **`axios`** or **`ky`**: A powerful HTTP client that supports interceptors for automatic token refresh, injecting the Authorization header, standardizing error codes (401, 403, 500), and triggering global error toast notifications.
 
 ### b. GraphQL Client
-*   **`@apollo/client`** (hoặc **`urql`** nếu muốn dung lượng nhẹ hơn):
-    *   Hỗ trợ GraphQL queries, mutations, subscriptions và normalized caching.
-    *   Tách riêng thành module `graphql-provider` độc lập để dự án nào không dùng GraphQL có thể tắt dễ dàng.
-*   **`graphql`**: Gói thư viện nền tảng để phân tích và biên dịch schema / queries.
-*   *(Tooling build-time)* **`@graphql-codegen/cli`**: Tự động sinh TypeScript types từ GraphQL schema backend.
+
+- **`@apollo/client`** (or **`urql`** for a lighter footprint):
+  - Supports GraphQL queries, mutations, subscriptions, and normalized caching.
+  - Separated into its own `graphql-provider` module so projects that don't use GraphQL can easily disable it.
+- **`graphql`**: The core library for parsing and compiling schemas/queries.
+- _(Build-time tooling)_ **`@graphql-codegen/cli`**: Automatically generates TypeScript types from the backend GraphQL schema.
 
 ### c. Real-time Communication (SignalR)
-*   **`@microsoft/signalr`**: Client SDK chính thức từ Microsoft cho SignalR, hỗ trợ WebSocket, Server-Sent Events (SSE) và Long Polling fallback để kết nối thời gian thực với backend .NET (dễ dàng trigger Toast message khi nhận sự kiện real-time).
+
+- **`@microsoft/signalr`**: Microsoft's official client SDK for SignalR, supporting WebSocket, Server-Sent Events (SSE), and Long Polling fallback for real-time connections to a .NET backend (making it easy to trigger a toast message when a real-time event is received).
 
 ### d. Push Notifications
-*   **`react-onesignal`** (hoặc OneSignal Web SDK): Tích hợp Web Push Notifications đa nền tảng, quản lý subscription token, phân nhóm người dùng và nhận thông báo đẩy nền.
+
+- **`react-onesignal`** (or the OneSignal Web SDK): Integrates cross-platform Web Push Notifications, manages subscription tokens, segments users, and receives background push notifications.
 
 ---
 
-## 3. Client State Management (Quản Lý State Cục Bộ & Toàn Cục)
+## 3. Client State Management (Local & Global State)
 
-*   **`zustand`**: State management tối giản, hiệu năng cực cao, không boilerplate, dễ chia nhỏ thành nhiều slice (auth store, theme store, layout store, notification store) và tích hợp middleware persist/devtools mượt mà.
-*   **`nuqs`** *(Next.js URL Query State)*: Đồng bộ state trực tiếp vào URL Search Params (rất phù hợp cho filters, search, tabs, pagination mà vẫn giữ được tính bookmarkable).
+- **`zustand`**: Minimal, extremely high-performance state management with no boilerplate, easy to split into multiple slices (auth store, theme store, layout store, notification store), and integrates smoothly with persist/devtools middleware.
+- **`nuqs`** _(Next.js URL Query State)_: Syncs state directly to URL search params (ideal for filters, search, tabs, and pagination while keeping the state bookmarkable).
 
 ---
 
-## 4. UI Design System, Tailwind CSS & Hệ Thống Toast Message (Cấu Hình Mặc Định Sẵn)
+## 4. UI Design System, Tailwind CSS & Toast Message System (Pre-configured Defaults)
 
-Bộ công cụ giao diện chuẩn headless component, được cấu hình sẵn hệ thống Design System và Toast Notification:
+A standard set of headless UI component tools, pre-configured with a Design System and Toast Notification system:
 
 ### a. Tailwind CSS Engine & Helpers
-*   **`tailwindcss`** (v3 / v4) & **`postcss`**, **`autoprefixer`**: Utility-first CSS framework.
-*   **`tailwind-merge`** & **`clsx`**: Hợp nhất và giải quyết xung đột class Tailwind khi tùy biến style linh hoạt (tiện ích `cn()`).
-*   **`class-variance-authority` (cva)**: Xây dựng các component có nhiều biến thể (variants: primary, outline, ghost, sizes: sm, md, lg) theo chuẩn thiết kế.
-*   **`tailwindcss-animate`**: Thư viện plugin tạo animation mượt mà cho dropdown, modal, dialog và toast.
+
+- **`tailwindcss`** (v3 / v4) & **`postcss`**, **`autoprefixer`**: Utility-first CSS framework.
+- **`tailwind-merge`** & **`clsx`**: Merge and resolve Tailwind class conflicts for flexible style customization (the `cn()` utility).
+- **`class-variance-authority` (cva)**: Builds components with multiple variants (variants: primary, outline, ghost; sizes: sm, md, lg) following design standards.
+- **`tailwindcss-animate`**: A plugin library for smooth animations on dropdowns, modals, dialogs, and toasts.
 
 ### b. Shadcn UI Primitives
-*   **`shadcn/ui`** (dựa trên **`@radix-ui/*`** primitives: `@radix-ui/react-dialog`, `@radix-ui/react-dropdown-menu`, `@radix-ui/react-slot`,...): Headless Accessible Components, toàn quyền tùy biến code trong repo.
-*   **`lucide-react`**: Bộ icon SVG đồng nhất, hiện đại, tối ưu tree-shaking.
-*   **`framer-motion`** (hoặc **`motion`**): Animation mượt mà cho transition và micro-interactions.
 
-### c. Hệ Thống Toast Message Cài Đặt Sẵn
-*   **`sonner`** (Thư viện Toast chuẩn khuyến nghị mới nhất của Shadcn UI):
-    *   Hỗ trợ `Toaster` component tích hợp sẵn theme Light/Dark/System.
-    *   Có thể gọi thông báo `toast.success()`, `toast.error()`, `toast.promise()` từ bất kỳ đâu (UI component, Zustand store, Axios interceptor, SignalR hub listener).
-*   *(Dự phòng truyền thống)* **`@radix-ui/react-toast`**: Primitive component cho Toast nếu muốn dựng notification drawer kiểu cổ điển của Shadcn.
+- **`shadcn/ui`** (built on **`@radix-ui/*`** primitives: `@radix-ui/react-dialog`, `@radix-ui/react-dropdown-menu`, `@radix-ui/react-slot`, etc.): Headless, accessible components with full code customization directly in the repo.
+- **`lucide-react`**: A consistent, modern SVG icon set, optimized for tree-shaking.
+- **`framer-motion`** (or **`motion`**): Smooth animations for transitions and micro-interactions.
 
----
+### c. Pre-installed Toast Message System
 
-## 5. Xử Lý Form & Xác Thực Dữ Liệu (Forms & Schema Validation)
-
-*   **`react-hook-form`**: Quản lý form state dựa trên Uncontrolled Component, tối ưu render hiệu năng cao.
-*   **`zod`**: Schema validation mạnh mẽ nhất hiện nay, tự động suy luận TypeScript type từ schema (`z.infer<typeof schema>`). Dùng đồng nhất cho:
-    *   Validate form đầu vào từ người dùng.
-    *   Validate Response Data từ REST API / SignalR payloads.
-    *   Validate biến môi trường hệ thống (.env).
-*   **`@hookform/resolvers`**: Cầu nối tích hợp Zod trực tiếp vào React Hook Form.
+- **`sonner`** (the latest recommended Toast library from Shadcn UI):
+  - Supports a `Toaster` component with built-in Light/Dark/System theme integration.
+  - Notifications can be triggered via `toast.success()`, `toast.error()`, `toast.promise()` from anywhere (UI components, Zustand stores, Axios interceptors, SignalR hub listeners).
+- _(Traditional fallback)_ **`@radix-ui/react-toast`**: A primitive Toast component if you want to build a classic-style Shadcn notification drawer.
 
 ---
 
-## 6. Tiện Ích Mở Rộng & Cơ Sở Hạ Tầng (Utilities & Pluggability)
+## 5. Form Handling & Data Validation (Forms & Schema Validation)
 
-*   **`@t3-oss/env-nextjs`**: Validate các biến môi trường (.env) ngay lúc build/runtime bằng Zod, ngăn chặn hoàn toàn lỗi thiếu config bí mật hoặc sai URL backend.
-*   **`next-themes`**: Quản lý theme Light / Dark / System đồng bộ hoàn hảo với Tailwind CSS và Sonner Toaster.
-*   **`date-fns`** hoặc **`dayjs`**: Xử lý, format và tính toán thời gian gọn nhẹ, hỗ trợ đa ngôn ngữ.
-*   **`next-intl`**: Cấu hình quốc tế hóa (i18n - Đa ngôn ngữ: Tiếng Việt, Tiếng Anh,...) tối ưu riêng cho Next.js App Router (RSC-friendly).
-*   **`lodash-es`** hoặc **`radashi`**: Bộ hàm tiện ích tối ưu hóa tree-shaking (debounce, throttle, cloneDeep, groupBy).
-*   **`nprogress`** & **`@types/nprogress`**: Hiển thị thanh tiến trình tải trang trên đầu màn hình khi chuyển route.
-
----
-
-## 7. Tiêu Chuẩn Mã Nguồn, Kiểm Soát Chất Lượng & Git Hooks (DevOps & DX)
-
-*   **`prettier`** & **`prettier-plugin-tailwindcss`**: Định dạng code tự động, tự sắp xếp các class Tailwind theo chuẩn khuyến nghị.
-*   **`@ianvs/prettier-plugin-sort-imports`**: Tự động nhóm và sắp xếp thứ tự các dòng `import` (thư viện ngoài, alias `@/components`, `@/lib`, `@/services`, CSS).
-*   **`eslint`** & **`eslint-config-next`**: Bắt lỗi cú pháp, quy chuẩn React hook, kiểm soát chất lượng code.
-*   **`husky`** & **`lint-staged`**: Tự động chạy linter và type-check trên các file được staged trước mỗi lượt git commit, đảm bảo code bẩn không lọt vào repository.
+- **`react-hook-form`**: Manages form state based on uncontrolled components, optimized for high-performance rendering.
+- **`zod`**: The most powerful schema validation library today, automatically inferring TypeScript types from the schema (`z.infer<typeof schema>`). Used consistently for:
+  - Validating user input in forms.
+  - Validating response data from REST APIs / SignalR payloads.
+  - Validating system environment variables (.env).
+- **`@hookform/resolvers`**: A bridge that integrates Zod directly into React Hook Form.
 
 ---
 
-## 8. Cấu Trúc Thư Mục Chuẩn Tích Hợp Sẵn Toast & Shadcn UI
+## 6. Extended Utilities & Infrastructure (Utilities & Pluggability)
+
+- **`@t3-oss/env-nextjs`**: Validates environment variables (.env) at build/runtime using Zod, completely preventing errors from missing secret configs or incorrect backend URLs.
+- **`next-themes`**: Manages Light / Dark / System themes, perfectly synced with Tailwind CSS and the Sonner Toaster.
+- **`date-fns`** or **`dayjs`**: Lightweight date handling, formatting, and calculations with multi-locale support.
+- **`next-intl`**: Internationalization configuration (i18n — multiple languages: Vietnamese, English, etc.) optimized specifically for the Next.js App Router (RSC-friendly).
+- **`lodash-es`** or **`radashi`**: A tree-shaking-optimized utility function library (debounce, throttle, cloneDeep, groupBy).
+- **`nprogress`** & **`@types/nprogress`**: Displays a page-loading progress bar at the top of the screen during route transitions.
+
+---
+
+## 7. Code Standards, Quality Control & Git Hooks (DevOps & DX)
+
+- **`prettier`** & **`prettier-plugin-tailwindcss`**: Automatic code formatting, automatically sorting Tailwind classes according to the recommended standard.
+- **`@ianvs/prettier-plugin-sort-imports`**: Automatically groups and orders `import` statements (external libraries, `@/components` alias, `@/lib`, `@/services`, CSS).
+- **`eslint`** & **`eslint-config-next`**: Catches syntax errors, enforces React hook rules, and controls code quality.
+- **`husky`** & **`lint-staged`**: Automatically runs the linter and type-check on staged files before every git commit, ensuring dirty code never makes it into the repository.
+
+---
+
+## 8. Standard Folder Structure with Toast & Shadcn UI Pre-integrated
 
 ```text
 src/
 ├── app/                        # Next.js App Router pages & layouts
-│   ├── layout.tsx              # Root Layout bọc AppProviders và <Toaster />
+│   ├── layout.tsx              # Root Layout wrapping AppProviders and <Toaster />
 │   └── page.tsx
 ├── components/
-│   ├── ui/                     # Primitives từ shadcn/ui (button.tsx, dialog.tsx, sonner.tsx, input.tsx,...)
-│   ├── common/                 # Các component dùng chung (Header, Sidebar, Footer, Data Table)
+│   ├── ui/                     # Primitives from shadcn/ui (button.tsx, dialog.tsx, sonner.tsx, input.tsx,...)
+│   ├── common/                 # Shared components (Header, Sidebar, Footer, Data Table)
 │   └── feedback/               # Error boundary, Loading spinner, Empty state
-├── config/                     # Cấu hình site, navigation, routes, icons
-├── constants/                  # Hằng số, mã lỗi, regex, storage keys
-├── hooks/                      # Custom hooks tái sử dụng
-├── lib/                        # Instance khởi tạo thư viện
-│   ├── utils.ts                # Hàm cn() kết hợp clsx + tailwind-merge
-│   ├── api-client.ts           # Axios instance kèm Interceptor tích hợp sonner toast tự động khi lỗi
-│   ├── query-client.ts         # React Query Client cấu hình mặc định
+├── config/                     # Site config, navigation, routes, icons
+├── constants/                  # Constants, error codes, regex, storage keys
+├── hooks/                      # Reusable custom hooks
+├── lib/                        # Library initialization instances
+│   ├── utils.ts                # cn() function combining clsx + tailwind-merge
+│   ├── api-client.ts           # Axios instance with interceptor that auto-triggers sonner toast on error
+│   ├── query-client.ts         # React Query Client default configuration
 │   ├── signalr-client.ts       # SignalR Hub connection builder
-│   └── env.ts                  # Zod schema validate .env
-├── modules/                    # (Feature-based) Hoặc chia theo nghiệp vụ: auth, user, billing,...
+│   └── env.ts                  # Zod schema for validating .env
+├── modules/                    # (Feature-based) or organized by domain: auth, user, billing,...
 │   ├── [feature]/
-│   │   ├── components/         # Giao diện riêng của feature
-│   │   ├── hooks/              # Hook gọi API/State của feature
-│   │   ├── services/           # Adapter gọi REST / GraphQL / SignalR
-│   │   ├── types/              # DTO, model TypeScript
-│   │   └── schemas/            # Zod validation schema
-├── providers/                  # Gom toàn bộ Provider (ThemeProvider, QueryProvider, ToastProvider)
-│   └── app-providers.tsx       # Bọc QueryClientProvider, ThemeProvider, Toaster
+│   │   ├── components/         # Feature-specific UI
+│   │   ├── hooks/               # Feature's API/state hooks
+│   │   ├── services/            # Adapters for REST / GraphQL / SignalR calls
+│   │   ├── types/                # DTOs, TypeScript models
+│   │   └── schemas/              # Zod validation schemas
+├── providers/                  # Groups all providers (ThemeProvider, QueryProvider, ToastProvider)
+│   └── app-providers.tsx       # Wraps QueryClientProvider, ThemeProvider, Toaster
 ├── stores/                     # Zustand slices (auth, settings, notifications)
-└── types/                      # Type definitions toàn cục
+└── types/                      # Global type definitions
 ```
 
-### Nguyên Tắc Tích Hợp Toast & UI Nhanh:
-1. **Sẵn sàng ở tầng Layout**: Component `<Toaster />` (từ `src/components/ui/sonner.tsx`) được mount sẵn tại Root Layout hoặc bên trong `AppProviders.tsx`, tự động đổi màu theo theme của `next-themes`.
-2. **Kích hoạt từ Interceptor / Realtime Hub**: Bạn có thể gọi `toast.error(message)` trực tiếp ngay trong hàm bắt lỗi của Axios Interceptor (khi gặp lỗi 401, 403, 500) hoặc trong event callback của SignalR mà không cần phải truyền hook vào từng React Component.
+### Quick Toast & UI Integration Principles:
+
+1. **Ready at the Layout level**: The `<Toaster />` component (from `src/components/ui/sonner.tsx`) is pre-mounted at the Root Layout or inside `AppProviders.tsx`, automatically switching color scheme according to `next-themes`.
+2. **Triggered from Interceptors / Realtime Hubs**: You can call `toast.error(message)` directly inside the Axios interceptor's error handler (for 401, 403, 500 errors) or in a SignalR event callback, without needing to pass a hook into every React component.

@@ -1,51 +1,47 @@
 # Social Metrics Client
 
-The frontend client for the **Social Metrics** platform — built on **Next.js 16 (App Router)**, **React 19**, **TypeScript**, and **Tailwind CSS v4**.
+A modern, high-performance web dashboard for multi-platform social media analytics and AI-powered strategic insights — built with **Next.js 16 (App Router & Turbopack)**, **React 19**, **TypeScript**, and **Tailwind CSS v4**.
 
 ---
 
-## 📌 Branch: `feature/componentProvider`
+## ✨ Overview & Core Features
 
-This branch focuses on establishing the application's **Component Providers**, foundational UI components, and integrating **REST & Realtime APIs** for the Social Metrics ecosystem.
+**Social Metrics Client** provides content creators, marketers, and enterprises with a unified workspace to monitor engagement, analyze audience sentiment, and optimize publishing strategies across major social networks.
 
-### Key Objectives & Deliverables on this Branch:
-
-- [x] **Root App Providers Setup:**
-  - `QueryClientProvider` (@tanstack/react-query): Server-state management, caching, and background synchronization.
-  - `NextIntlClientProvider` (next-intl): Internationalization framework (currently supporting English `en` and Vietnamese `vi`, extensible to additional locales).
-  - `ThemeProvider` (next-themes): Dark/Light/System theme synchronization with Tailwind CSS.
-  - `Toaster` (sonner): Global accessible toast notification system.
-- [x] **Core Layout & Navigation:**
-  - Responsive **Navbar** featuring a mobile navigation drawer, desktop centered menu links, brand logo, locale switcher, and authenticated user dropdown (Profile, Logout).
-- [x] **Authentication APIs Integration (REST):**
-  - `POST /v1/login`: User login (Payload: `email`, `password`).
-  - `POST /v1/register`: Account creation (Payload: `fullname`, `username`, `email`, `password`, `address`, `dayOfBirth`).
-  - Robust form validation with `react-hook-form` and `zod`.
-  - Global authentication state persisted via Zustand (`useAuthStore`).
-- [x] **Role-Based Route Protection:**
-  - Implemented using **Next.js 16 Proxy** (`src/proxy.ts`).
-  - Role redirects: `ADMIN` and `STAFF` are routed to the Admin panel (`/admin`), while `CUSTOMER` is routed to the customer dashboard (`/dashboard`).
-  - Authenticated sessions are prevented from accessing public auth pages (`/login`, `/register`).
-- [ ] **Upcoming Roadmap on this Branch:**
-  - Social metrics analytics and reporting API integration.
-  - Real-time event streaming and notifications via SignalR (`src/lib/signalr-client.ts`).
-  - Detailed Admin and Customer dashboard views.
+- **Unified Multi-Platform Analytics:**
+  - Integrates and tracks performance across YouTube, TikTok, Facebook, Instagram, and Threads.
+  - Centralized metrics for impressions, reach, follower growth, engagement rates, views, and interactions.
+- **AI-Driven Strategy & Insights:**
+  - Automated content recommendations, audience sentiment analysis, best posting times, and virality scoring.
+  - Interactive AI consultation module for actionable growth guidance.
+- **Content & Channel Management:**
+  - Cross-platform post feeds, channel performance rankings, and deep-dive analytics.
+  - Scheduled reporting and exportable performance summaries.
+- **Secure Authentication & Onboarding:**
+  - Robust Email/Password authentication with `react-hook-form` and `zod` validation.
+  - One-click Google OAuth 2.0 Single Sign-On (SSO) integration.
+  - Role-based route protection and automatic redirects (`ADMIN`, `STAFF`, `CUSTOMER`) powered by Next.js 16 proxy.
+- **Creator & Social Pulse Design System:**
+  - Modern, accessible UI built with `@base-ui/react` primitives and Tailwind CSS v4.
+  - Signature Sunset Violet (`#7C3AED`) and Vivid Coral (`#FF5C67`) color palette.
+  - Seamless Light and Dark mode theming with fluid glassmorphic visual cues.
+- **Internationalization (i18n):**
+  - Full localization support for English (`en`) and Vietnamese (`vi`) powered by `next-intl`.
 
 ---
 
 ## 🛠 Tech Stack
 
-| Domain                          | Technology / Library                                                                                                     |
+| Category                        | Technologies                                                                                                             |
 | ------------------------------- | ------------------------------------------------------------------------------------------------------------------------ |
-| **Framework**                   | [Next.js 16](https://nextjs.org/) (Turbopack, App Router)                                                                |
-| **UI Components**               | [React 19](https://react.dev/), [@base-ui/react](https://base-ui.com/), [Tailwind CSS v4](https://tailwindcss.com/)      |
-| **Icons**                       | [Lucide React](https://lucide.dev/)                                                                                      |
-| **State Management**            | [Zustand](https://zustand-demo.pmnd.rs/) (Auth Store, Locale Store)                                                      |
+| **Framework & Runtime**         | [Next.js 16](https://nextjs.org/) (App Router, Turbopack), [React 19](https://react.dev/), TypeScript                    |
+| **Styling & UI Primitives**     | [Tailwind CSS v4](https://tailwindcss.com/), [@base-ui/react](https://base-ui.com/), [Lucide React](https://lucide.dev/) |
+| **Client State Management**     | [Zustand](https://zustand-demo.pmnd.rs/) (Auth & Locale stores)                                                          |
 | **Server State & Networking**   | [TanStack React Query v5](https://tanstack.com/query), [Axios](https://axios-http.com/)                                  |
-| **Realtime & GraphQL**          | [@microsoft/signalr](https://www.npmjs.com/package/@microsoft/signalr), [@apollo/client](https://www.apollographql.com/) |
-| **Form Handling**               | [React Hook Form](https://react-hook-form.com/), [Zod](https://zod.dev/)                                                 |
+| **Realtime & WebSockets**       | [@microsoft/signalr](https://www.npmjs.com/package/@microsoft/signalr)                                                   |
+| **Forms & Validation**          | [React Hook Form](https://react-hook-form.com/), [Zod](https://zod.dev/)                                                 |
 | **Internationalization (i18n)** | [next-intl](https://next-intl.dev/)                                                                                      |
-| **Notifications**               | [Sonner](https://sonner.emilkowal.ski/)                                                                                  |
+| **Theming & Feedback**          | [next-themes](https://github.com/pacocoursey/next-themes), [Sonner](https://sonner.emilkowal.ski/)                       |
 
 ---
 
@@ -53,32 +49,41 @@ This branch focuses on establishing the application's **Component Providers**, f
 
 ```
 src/
-├── app/                      # Next.js App Router routes
-│   ├── (admin)/              # Admin & Staff area (/admin)
-│   ├── (auth)/               # Authentication pages (/login, /register)
-│   ├── (dashboard)/          # Customer dashboard (/dashboard)
-│   ├── layout.tsx            # Root layout
-│   └── page.tsx              # Landing homepage
+├── app/                        # Next.js App Router routes & layouts
+│   ├── (admin)/                # Administration & staff control panel (/admin)
+│   ├── (auth)/                 # Authentication pages (/login, /register, /auth/callback)
+│   ├── (dashboard)/            # Creator analytics workspace (/dashboard)
+│   │   └── dashboard/
+│   │       ├── ai/             # AI strategic insights & recommendations
+│   │       ├── channels/       # Social channel breakdown & metrics
+│   │       ├── insights/       # Deep-dive analytics & trends
+│   │       ├── platforms/      # Connected platform management & auth links
+│   │       ├── posts/          # Content post feed & performance list
+│   │       └── reports/        # Exportable metric summaries & reports
+│   ├── layout.tsx              # Root HTML & body layout
+│   └── page.tsx                # Marketing landing page
 ├── components/
-│   ├── common/               # Shared cross-cutting components (Navbar, etc.)
-│   ├── feedback/             # Feedback components (Dialogs, Toasts, etc.)
-│   └── ui/                   # Base UI primitives (Button, Card, Input, etc.)
-├── config/                   # Configuration files
-├── constants/                # App-wide constants
-├── hooks/                    # Reusable React hooks
+│   ├── auth/                   # Authentication forms & OAuth buttons
+│   ├── common/                 # Global UI (Navbar, Locale Switcher, etc.)
+│   ├── dashboard/              # Dashboard layouts, sidebar, widgets & stat cards
+│   ├── feedback/               # Dialogs, confirmation alerts, toast helpers
+│   └── ui/                     # Base UI wrappers (Button, Card, Input, DropdownMenu, etc.)
+├── config/                     # Application configurations & metadata
+├── constants/                  # App constants & platform configurations
+├── hooks/                      # Custom React hooks (useAuth, usePlatforms, useAI, useMounted)
 ├── lib/
-│   ├── api-client.ts         # Axios instance with interceptors and base configuration
-│   ├── env.ts                # Type-safe environment validation via Zod
-│   ├── query-client.ts       # TanStack Query client instance
-│   └── signalr-client.ts     # SignalR connection manager
+│   ├── api-client.ts           # Axios client configured with JWT interceptors
+│   ├── env.ts                  # Type-safe environment validation via Zod
+│   ├── query-client.ts         # TanStack Query client configuration
+│   └── signalr-client.ts       # SignalR real-time client connection manager
 ├── modules/
-│   └── auth/                 # Authentication services, models, and DTOs
+│   └── auth/                   # Authentication domain services and contracts
 ├── providers/
-│   └── app-providers.tsx     # Consolidated Root Providers tree
-├── proxy.ts                  # Route protection and proxy rules (Next.js 16)
-├── stores/                   # Zustand stores (auth, locale)
-└── types/                    # Shared TypeScript declarations
-messages/                     # i18n translation dictionaries (en.json, vi.json)
+│   └── app-providers.tsx       # Root provider composition (Query, i18n, Theme, Toast)
+├── proxy.ts                    # Next.js 16 route proxy & role-based route guard
+├── stores/                     # Zustand persistent stores (auth.store, locale.store)
+└── types/                      # Shared TypeScript definitions
+messages/                       # Localization dictionaries (en.json, vi.json)
 ```
 
 ---
@@ -87,59 +92,57 @@ messages/                     # i18n translation dictionaries (en.json, vi.json)
 
 ### 1. Prerequisites
 
-- **Node.js**: v18 or newer
-- **pnpm**: v12.4.1 (Recommended: activate via `corepack enable` or `npm i -g pnpm@12.4.1`)
+- **Node.js**: v18.0.0 or higher
+- **pnpm**: v10+ (Recommended: `npm i -g pnpm`)
 
-### 2. Environment Setup
+### 2. Environment Configuration
 
-Create a `.env.local` file by copying [`.env.example`](file:///.env.example):
+Create a local environment file by copying `.env.example`:
 
 ```bash
 cp .env.example .env.local
 ```
 
-Required environment variables:
+Configure your environment variables:
 
 ```env
+# Client URL
 NEXT_PUBLIC_APP_URL=http://localhost:3000
-NEXT_PUBLIC_API_BASE_URL=http://localhost:5000
+
+# Backend API Endpoint (FastAPI / .NET Core / Node.js)
+NEXT_PUBLIC_API_BASE_URL=http://localhost:8000
 ```
 
-### 3. Installation & Scripts
+### 3. Installation & Development
 
 ```bash
 # Install dependencies
 pnpm install
 
-# Start development server
+# Start local development server with Turbopack
 pnpm dev
 
-# Run TypeScript type check
+# Type check TypeScript definitions
 pnpm type-check
 
-# Run ESLint
+# Run ESLint validation
 pnpm lint
 
 # Build for production
-pnpm run build
+pnpm build
+
+# Start production server
+pnpm start
 ```
 
 ---
 
-## 🌐 Internationalization (i18n)
+## 🌐 Localization (i18n)
 
-User locale preferences are persisted to local storage via `src/stores/locale.store.ts`.
+Locale preferences are dynamically persisted to local storage and hydrated via `src/stores/locale.store.ts`.
 
 To add a new language:
 
-1. Create a message dictionary file: `messages/<locale-code>.json` (e.g., `messages/ja.json`).
-2. Register the locale in [`src/stores/locale.store.ts`](file:///src/stores/locale.store.ts):
-   ```ts
-   export const LOCALES = ["vi", "en", "ja"] as const;
-   export const LOCALE_LABELS = {
-     vi: "Tiếng Việt",
-     en: "English",
-     ja: "日本語",
-   };
-   ```
-3. Register the dictionary in [`src/providers/app-providers.tsx`](file:///src/providers/app-providers.tsx).
+1. Create a dictionary file under `messages/<locale-code>.json` (e.g., `messages/ja.json`).
+2. Add the locale identifier to `LOCALES` in [`src/stores/locale.store.ts`](file:///src/stores/locale.store.ts).
+3. Import and map the dictionary in [`src/providers/app-providers.tsx`](file:///src/providers/app-providers.tsx).
