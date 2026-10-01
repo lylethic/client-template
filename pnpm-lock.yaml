@@ -207,9 +207,6 @@ settings:
 importers:
   .:
     dependencies:
-      "@apollo/client":
-        specifier: ^4.2.12
-        version: 4.2.12(graphql@17.0.2)(react-dom@19.2.8(react@19.2.8))(react@19.2.8)(rxjs@7.8.2)
       "@base-ui/react":
         specifier: ^1.8.0
         version: 1.8.0(@types/react@19.3.0)(date-fns@4.4.0)(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
@@ -237,18 +234,12 @@ importers:
       clsx:
         specifier: ^2.1.1
         version: 2.1.1
-      cn:
-        specifier: ^0.2.6
-        version: 0.2.6
       date-fns:
         specifier: ^4.4.0
         version: 4.4.0
       framer-motion:
         specifier: ^13.2.0
         version: 13.2.0(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
-      graphql:
-        specifier: ^17.0.2
-        version: 17.0.2
       lucide-react:
         specifier: ^1.44.0
         version: 1.44.0(react@19.2.8)
@@ -279,9 +270,6 @@ importers:
       react-hook-form:
         specifier: ^7.87.0
         version: 7.87.0(react@19.2.8)
-      react-onesignal:
-        specifier: ^3.5.6
-        version: 3.5.6
       shadcn:
         specifier: ^4.21.0
         version: 4.21.0(supports-color@7.2.0)(typescript@5.9.3)
@@ -357,28 +345,6 @@ packages:
         integrity: sha512-U4+70Pc5ZS9osnCBCE5Jha/ciHM+Yp+CNMNC/7HvYbNRk1Ldd+f7qO65W5qfhu/TCv+/ozljlXXe9Nj8419DMA==,
       }
     engines: { node: ">=10" }
-
-  "@apollo/client@4.2.12":
-    resolution:
-      {
-        integrity: sha512-+KS+LM/gZ58z92p9owZZpI54yCc27KfUi1HOtLrxmxz9kDIqUcp/zh+mNjCWCbNZkWGzWslvbbmXGGtTWT8nkw==,
-      }
-    peerDependencies:
-      graphql: ^16.0.0 || ^17.0.0
-      graphql-ws: ^5.5.5 || ^6.0.3
-      react: ^17.0.0 || ^18.0.0 || >=19.0.0-rc
-      react-dom: ^17.0.0 || ^18.0.0 || >=19.0.0-rc
-      rxjs: ^7.3.0
-      subscriptions-transport-ws: ^0.9.0 || ^0.11.0
-    peerDependenciesMeta:
-      graphql-ws:
-        optional: true
-      react:
-        optional: true
-      react-dom:
-        optional: true
-      subscriptions-transport-ws:
-        optional: true
 
   "@babel/code-frame@7.29.7":
     resolution:
@@ -812,14 +778,6 @@ packages:
       {
         integrity: sha512-kHEAFOkeJSPNi7c5PaKaRjxcBrJwzzt81ifUu+8uve1EDW/VJl83KsxmqgqNZLzcFEhSliZGvx3+pk/RH0IOmg==,
       }
-
-  "@graphql-typed-document-node/core@3.2.0":
-    resolution:
-      {
-        integrity: sha512-mB9oAsNCm9aM3/SOv4YtBMqZbYj10R7dkq8byBqxGY/ncFwhf2oQzMV+LCRlWoDSEBJ3COiR1yeDvMtsoOsuFQ==,
-      }
-    peerDependencies:
-      graphql: ^0.8.0 || ^0.9.0 || ^0.10.0 || ^0.11.0 || ^0.12.0 || ^0.13.0 || ^14.0.0 || ^15.0.0 || ^16.0.0 || ^17.0.0
 
   "@hono/node-server@2.1.1":
     resolution:
@@ -2254,34 +2212,6 @@ packages:
       }
     cpu: [x64]
     os: [win32]
-
-  "@wry/caches@1.0.1":
-    resolution:
-      {
-        integrity: sha512-bXuaUNLVVkD20wcGBWRyo7j9N3TxePEWFZj2Y+r9OoUzfqmavM84+mFykRicNsBqatba5JLay1t48wxaXaWnlA==,
-      }
-    engines: { node: ">=8" }
-
-  "@wry/context@0.7.4":
-    resolution:
-      {
-        integrity: sha512-jmT7Sb4ZQWI5iyu3lobQxICu2nC/vbUhP0vIdd6tHC9PTfenmRmuIFqktc6GH9cgi+ZHnsLWPvfSvc4DrYmKiQ==,
-      }
-    engines: { node: ">=8" }
-
-  "@wry/equality@0.5.7":
-    resolution:
-      {
-        integrity: sha512-BRFORjsTuQv5gxcXsuDXx6oGRhuVsEGwZy6LOzRRfgu+eSfxbhUQ9L9YtSEIuIjY/o7g3iWFjrc5eSY1GXP2Dw==,
-      }
-    engines: { node: ">=8" }
-
-  "@wry/trie@0.5.0":
-    resolution:
-      {
-        integrity: sha512-FNoYzHawTMk/6KMQoEG5O4PuioX19UbwdQKF44yw0nLfOypfQdjtfZzo/UIJWAJ23sNIFbD1Ug9lbaDGMwbqQA==,
-      }
-    engines: { node: ">=8" }
 
   abort-controller@3.0.0:
     resolution:
@@ -3759,22 +3689,6 @@ packages:
         integrity: sha512-RbJ5/jmFcNNCcDV5o9eTnBLJ/HszWV0P73bc+Ff4nS/rJj+YaS6IGyiOL0VoBYX+l1Wrl3k63h/KrH+nhJ0XvQ==,
       }
 
-  graphql-tag@2.12.7:
-    resolution:
-      {
-        integrity: sha512-xnE/NFzy+0eIesvAsREJZ284zTl/wYuBAvpsFSDhRGRdRHdnE90M21Q3xAWyYInb0J756c6x0pIQ62+vtvOs1Q==,
-      }
-    engines: { node: ">=10" }
-    peerDependencies:
-      graphql: ^0.9.0 || ^0.10.0 || ^0.11.0 || ^0.12.0 || ^0.13.0 || ^14.0.0 || ^15.0.0 || ^16.0.0 || ^17.0.0
-
-  graphql@17.0.2:
-    resolution:
-      {
-        integrity: sha512-FRWbddMxfkjiB7z+aQDWIR+E34xo9I8c9mtK2RPv8PmMzKRvrdsreHL/Ui/TmwHJfhHChEtsFPyMHKI+xuarQQ==,
-      }
-    engines: { node: ^22.0.0 || ^24.0.0 || ^25.0.0 || >=26.0.0 }
-
   has-bigints@1.1.0:
     resolution:
       {
@@ -5062,12 +4976,6 @@ packages:
       }
     engines: { node: ">=12" }
 
-  optimism@0.18.1:
-    resolution:
-      {
-        integrity: sha512-mLXNwWPa9dgFyDqkNi54sjDyNJ9/fTI6WGBLgnXku1vdKY/jovHfZT5r+aiVeFFLOz+foPNOm5YJ4mqgld2GBQ==,
-      }
-
   optionator@0.9.4:
     resolution:
       {
@@ -5471,13 +5379,6 @@ packages:
         integrity: sha512-24e6ynE2H+OKt4kqsOvNd8kBpV65zoxbA4BVsEOB3ARVWQki/DHzaUoC5KuON/BiccDaCCTZBuOcfZs70kR8bQ==,
       }
 
-  react-onesignal@3.5.6:
-    resolution:
-      {
-        integrity: sha512-QlvuWilG8n86GMaYG7a7DSzyLrZIsbM6PFW2XrDI68AYV50axUF5RCzWIqEGfNc1COa/QiDlz7wGkpuiKBayoQ==,
-      }
-    engines: { node: ">=18" }
-
   react@19.2.8:
     resolution:
       {
@@ -5584,12 +5485,6 @@ packages:
     resolution:
       {
         integrity: sha512-5l4VyZR86LZ/lDxZTR6jqL8AFE2S0IFLMP26AbjsLVADxHdhB/c0GUsH+y39UfCi3dzz8OlQuPmnaJOMoDHQBA==,
-      }
-
-  rxjs@7.8.2:
-    resolution:
-      {
-        integrity: sha512-dhKf903U/PQZY6boNNtAGdWbG85WAbjT/1xYoZIC7FAY0yWapOBQVsVrDl58W86//e1VpMNBtRV4MaXfdMySFA==,
       }
 
   safe-array-concat@1.1.4:
@@ -6464,21 +6359,6 @@ packages:
 snapshots:
   "@alloc/quick-lru@5.3.0": {}
 
-  "@apollo/client@4.2.12(graphql@17.0.2)(react-dom@19.2.8(react@19.2.8))(react@19.2.8)(rxjs@7.8.2)":
-    dependencies:
-      "@graphql-typed-document-node/core": 3.2.0(graphql@17.0.2)
-      "@wry/caches": 1.0.1
-      "@wry/equality": 0.5.7
-      "@wry/trie": 0.5.0
-      graphql: 17.0.2
-      graphql-tag: 2.12.7(graphql@17.0.2)
-      optimism: 0.18.1
-      rxjs: 7.8.2
-      tslib: 2.8.1
-    optionalDependencies:
-      react: 19.2.8
-      react-dom: 19.2.8(react@19.2.8)
-
   "@babel/code-frame@7.29.7":
     dependencies:
       "@babel/helper-validator-identifier": 7.29.7
@@ -6823,10 +6703,6 @@ snapshots:
   "@formatjs/intl-localematcher@0.8.13":
     dependencies:
       "@formatjs/fast-memoize": 3.1.7
-
-  "@graphql-typed-document-node/core@3.2.0(graphql@17.0.2)":
-    dependencies:
-      graphql: 17.0.2
 
   "@hono/node-server@2.1.1(hono@4.13.7)":
     dependencies:
@@ -7518,22 +7394,6 @@ snapshots:
 
   "@unrs/resolver-binding-win32-x64-msvc@1.12.2":
     optional: true
-
-  "@wry/caches@1.0.1":
-    dependencies:
-      tslib: 2.8.1
-
-  "@wry/context@0.7.4":
-    dependencies:
-      tslib: 2.8.1
-
-  "@wry/equality@0.5.7":
-    dependencies:
-      tslib: 2.8.1
-
-  "@wry/trie@0.5.0":
-    dependencies:
-      tslib: 2.8.1
 
   abort-controller@3.0.0:
     dependencies:
@@ -8594,13 +8454,6 @@ snapshots:
 
   graceful-fs@4.2.11: {}
 
-  graphql-tag@2.12.7(graphql@17.0.2):
-    dependencies:
-      graphql: 17.0.2
-      tslib: 2.8.1
-
-  graphql@17.0.2: {}
-
   has-bigints@1.1.0: {}
 
   has-flag@4.0.0: {}
@@ -9278,13 +9131,6 @@ snapshots:
       is-docker: 2.2.1
       is-wsl: 2.2.0
 
-  optimism@0.18.1:
-    dependencies:
-      "@wry/caches": 1.0.1
-      "@wry/context": 0.7.4
-      "@wry/trie": 0.5.0
-      tslib: 2.8.1
-
   optionator@0.9.4:
     dependencies:
       deep-is: 0.1.4
@@ -9468,8 +9314,6 @@ snapshots:
 
   react-is@16.13.1: {}
 
-  react-onesignal@3.5.6: {}
-
   react@19.2.8: {}
 
   recast@0.23.21:
@@ -9543,10 +9387,6 @@ snapshots:
   run-parallel@1.2.0:
     dependencies:
       queue-microtask: 1.2.3
-
-  rxjs@7.8.2:
-    dependencies:
-      tslib: 2.8.1
 
   safe-array-concat@1.1.4:
     dependencies:

@@ -139,5 +139,73 @@
     "trendingDesc": "High-potential topics frequently discussed by your audience",
     "noTrending": "No trending topics detected.",
     "actionableTitle": "Actionable Strategic Checklist"
+  },
+  "register": {
+    "title": "Create an account",
+    "description": "Fill in your details below to get started.",
+    "décription": "Fill in your details below to get started.",
+    "googleSignUp": "Sign up with Google",
+    "orEmail": "Or register with email",
+    "fullName": "Full name",
+    "fullNamePlaceholder": "Jane Doe",
+    "email": "Email",
+    "emailPlaceholder": "you@example.com",
+    "password": "Password",
+    "confirmPassword": "Confirm password",
+    "createAccount": "Create account",
+    "creatingAccount": "Creating account…",
+    "success": "Account created successfully!",
+    "alreadyHaveAccount": "Already have an account?",
+    "signIn": "Sign in"
+  },
+  "login": {
+    "title": "Sign in",
+    "description": "Enter your email and password to access your account.",
+    "googleSignIn": "Sign in with Google",
+    "orEmail": "Or continue with email",
+    "email": "Email",
+    "emailPlaceholder": "you@example.com",
+    "password": "Password",
+    "passwordPlaceholder": "••••••••",
+    "signIn": "Sign in",
+    "signingIn": "Signing in…",
+    "success": "Sign in successful!",
+    "loginFailed": "Sign in failed: {error}",
+    "dontHaveAccount": "Don't have an account?",
+    "register": "Register"
+  },
+  "googleAuthButton": {
+    "signup": "Sign up with Google",
+    "signin": "Log in with Google",
+    "ggMessgae": "Can not connect to Google. Please try again"
+  },
+  "authCallback": {
+    "title": "Authenticating Google account...",
+    "description": "Please wait a moment.",
+    "loginFailed": "Google sign-in failed: {error}",
+    "noCredentials": "No authentication credentials found from Google.",
+    "success": "Signed in with Google successfully!",
+    "fetchUserError": "An error occurred while loading account details."
+  },
+  "channels": {
+    "title": "Channels & Snapshot Management",
+    "description": "List of all connected social media channels with latest snapshot metrics",
+    "noChannels": "No channels connected yet"
+  },
+  "reports": {
+    "title": "Export Reports",
+    "description": "Export comprehensive social media performance and growth reports in Excel (.xlsx) and PDF format.",
+    "timeframe": "Timeframe",
+    "platform": "Platform",
+    "exportConfig": "Export Configuration",
+    "time365d": "Last 365 days",
+    "excelReportTitle": "Excel Report (.xlsx)",
+    "excelReportDesc": "Full raw metrics, timeseries data, and post engagement analytics formatted for spreadsheet analysis.",
+    "pdfReportTitle": "Executive PDF Summary",
+    "pdfReportDesc": "Formatted presentation report with growth charts, top content tables, and AI recommendations.",
+    "downloadExcel": "Download Excel",
+    "downloadPdf": "Download PDF",
+    "success": "Report downloaded successfully!",
+    "failed": "Failed to generate report. Please try again."
   }
 }

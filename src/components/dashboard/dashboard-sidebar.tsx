@@ -5,7 +5,6 @@ import { useTranslations } from "next-intl";
 import { useTheme } from "next-themes";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
-import { cn } from "cn";
 import {
   BarChart3,
   Bot,
@@ -25,6 +24,7 @@ import {
 } from "lucide-react";
 import { toast } from "sonner";
 
+import { cn } from "@/lib/utils";
 import { useMounted } from "@/hooks/use-mounted";
 import { useAuthStore } from "@/stores/auth.store";
 import {

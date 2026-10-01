@@ -1,6 +1,7 @@
 "use client";
 
-import * as React from "react";
+import { useState } from "react";
+import { useTranslations } from "next-intl";
 import { Loader2 } from "lucide-react";
 import { toast } from "sonner";
 
@@ -33,10 +34,12 @@ function GoogleIcon({ className }: { className?: string }) {
 interface GoogleSignInButtonProps {
   mode?: "signin" | "signup";
   className?: string;
+  label?: string;
 }
 
-export function GoogleSignInButton({ mode = "signin", className }: GoogleSignInButtonProps) {
-  const [loading, setLoading] = React.useState(false);
+export function GoogleSignInButton({ mode = "signin", className, label }: GoogleSignInButtonProps) {
+  const t = useTranslations("googleAuthButton");
+  const [loading, setLoading] = useState(false);
 
   const handleClick = async () => {
     try {
@@ -45,7 +48,7 @@ export function GoogleSignInButton({ mode = "signin", className }: GoogleSignInB
       window.location.href = url;
     } catch {
       setLoading(false);
-      toast.error("Không thể kết nối đến máy chủ Google. Vui lòng thử lại sau.");
+      toast.error(t("ggMessgae"));
     }
   };
 
@@ -62,7 +65,7 @@ export function GoogleSignInButton({ mode = "signin", className }: GoogleSignInB
       ) : (
         <GoogleIcon className="size-4 shrink-0" />
       )}
-      <span>{mode === "signup" ? "Đăng ký với Google" : "Tiếp tục với Google"}</span>
+      <span>{label ?? (mode === "signup" ? t("signup") : t("signin"))}</span>
     </Button>
   );
 }

@@ -29,7 +29,13 @@ export const useLocaleStore = create<LocaleState>()(
   persist(
     (set) => ({
       locale: DEFAULT_LOCALE,
-      setLocale: (locale) => set({ locale }),
+      setLocale: (locale) => {
+        if (typeof document !== "undefined") {
+          document.cookie = `locale=${locale}; path=/; max-age=31536000; SameSite=Lax`;
+          document.documentElement.lang = locale;
+        }
+        set({ locale });
+      },
     }),
     { name: "locale-storage" },
   ),

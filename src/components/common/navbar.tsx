@@ -5,10 +5,10 @@ import { useTranslations } from "next-intl";
 import { useTheme } from "next-themes";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
-import { cn } from "cn";
 import { Laptop, LayoutDashboard, Menu, Moon, Sun, User, X } from "lucide-react";
 import { toast } from "sonner";
 
+import { cn } from "@/lib/utils";
 import { useAuthStore } from "@/stores/auth.store";
 import { LOCALE_LABELS, LOCALES, useLocaleStore, type Locale } from "@/stores/locale.store";
 import { Button } from "@/components/ui/button";

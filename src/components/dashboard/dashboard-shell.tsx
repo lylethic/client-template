@@ -5,9 +5,9 @@ import { useTranslations } from "next-intl";
 import { useTheme } from "next-themes";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { cn } from "cn";
 import { Menu, Moon, Sun, X } from "lucide-react";
 
+import { cn } from "@/lib/utils";
 import { useMounted } from "@/hooks/use-mounted";
 import { useAuthStore } from "@/stores/auth.store";
 import { LOCALES, useLocaleStore, type Locale } from "@/stores/locale.store";

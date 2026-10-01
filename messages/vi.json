@@ -139,5 +139,73 @@
     "trendingDesc": "Các chủ đề có tiềm năng viral và được khán giả hỏi nhiều nhất",
     "noTrending": "Chưa có chủ đề nổi bật ghi nhận.",
     "actionableTitle": "Hành Động Khuyến Nghị Cần Thực Hiện"
+  },
+  "register": {
+    "title": "Tạo tài khoản",
+    "description": "Điền thông tin của bạn bên dưới để bắt đầu.",
+    "décription": "Điền thông tin của bạn bên dưới để bắt đầu.",
+    "googleSignUp": "Đăng ký với Google",
+    "orEmail": "Hoặc đăng ký bằng email",
+    "fullName": "Họ và tên",
+    "fullNamePlaceholder": "Nguyễn Văn A",
+    "email": "Email",
+    "emailPlaceholder": "you@example.com",
+    "password": "Mật khẩu",
+    "confirmPassword": "Xác nhận mật khẩu",
+    "createAccount": "Tạo tài khoản",
+    "creatingAccount": "Đang tạo tài khoản…",
+    "success": "Tạo tài khoản thành công!",
+    "alreadyHaveAccount": "Đã có tài khoản?",
+    "signIn": "Đăng nhập"
+  },
+  "login": {
+    "title": "Đăng nhập",
+    "description": "Nhập email và mật khẩu của bạn để truy cập tài khoản.",
+    "googleSignIn": "Đăng nhập với Google",
+    "orEmail": "Hoặc tiếp tục với email",
+    "email": "Email",
+    "emailPlaceholder": "you@example.com",
+    "password": "Mật khẩu",
+    "passwordPlaceholder": "••••••••",
+    "signIn": "Đăng nhập",
+    "signingIn": "Đang đăng nhập…",
+    "success": "Đăng nhập thành công!",
+    "loginFailed": "Đăng nhập thất bại: {error}",
+    "dontHaveAccount": "Chưa có tài khoản?",
+    "register": "Đăng ký"
+  },
+  "googleAuthButton": {
+    "signup": "Đăng ký với Google",
+    "signin": "Đăng nhập với Google",
+    "ggMessgae": "Không thể kết nối đến máy chủ Google. Vui lòng thử lại sau."
+  },
+  "authCallback": {
+    "title": "Đang xác thực tài khoản Google...",
+    "description": "Vui lòng đợi trong giây lát.",
+    "loginFailed": "Đăng nhập Google thất bại: {error}",
+    "noCredentials": "Không tìm thấy thông tin xác thực từ Google.",
+    "success": "Đăng nhập bằng Google thành công!",
+    "fetchUserError": "Xảy ra lỗi khi tải thông tin tài khoản."
+  },
+  "channels": {
+    "title": "Quản lý kênh & Snapshot",
+    "description": "Danh sách tất cả các kênh mạng xã hội kèm số liệu snapshot mới nhất",
+    "noChannels": "Chưa có kênh nào được liên kết"
+  },
+  "reports": {
+    "title": "Xuất báo cáo dữ liệu",
+    "description": "Xuất báo cáo phân tích hiệu suất và tăng trưởng mạng xã hội định dạng Excel (.xlsx) và PDF.",
+    "timeframe": "Khoảng thời gian",
+    "platform": "Nền tảng",
+    "exportConfig": "Cấu hình xuất báo cáo",
+    "time365d": "365 ngày qua",
+    "excelReportTitle": "Báo cáo Excel (.xlsx)",
+    "excelReportDesc": "Dữ liệu thô đầy đủ, số liệu chuỗi thời gian và thống kê bài đăng tối ưu cho phân tích bảng tính.",
+    "pdfReportTitle": "Bản tóm tắt PDF chuyên sâu",
+    "pdfReportDesc": "Báo cáo trình bày trực quan kèm biểu đồ tăng trưởng, danh sách nội dung nổi bật và đề xuất AI.",
+    "downloadExcel": "Tải báo cáo Excel",
+    "downloadPdf": "Tải báo cáo PDF",
+    "success": "Tải báo cáo thành công!",
+    "failed": "Xuất báo cáo thất bại, vui lòng thử lại."
   }
 }

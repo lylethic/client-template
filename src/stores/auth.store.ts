@@ -31,13 +31,15 @@ interface AuthState {
  * @example
  * const { user, isAuthenticated, clearAuth } = useAuthStore();
  */
-function setCookie(name: string, value: string, days = 7) {
+export function setAuthCookie(name: string, value: string, days = 7) {
   if (typeof document === "undefined") return;
   const expires = new Date(Date.now() + days * 864e5).toUTCString();
-  document.cookie = `${name}=${encodeURIComponent(value)}; path=/; expires=${expires}; SameSite=Lax`;
+  const secure =
+    typeof window !== "undefined" && window.location.protocol === "https:" ? "; Secure" : "";
+  document.cookie = `${name}=${encodeURIComponent(value)}; path=/; expires=${expires}; SameSite=Lax${secure}`;
 }
 
-function removeCookie(name: string) {
+export function removeAuthCookie(name: string) {
   if (typeof document === "undefined") return;
   document.cookie = `${name}=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT; SameSite=Lax`;
 }
@@ -54,14 +56,14 @@ export const useAuthStore = create<AuthState>()(
         setTokens: (accessToken, refreshToken) => {
           localStorage.setItem("access_token", accessToken);
           localStorage.setItem("refresh_token", refreshToken);
-          setCookie("access_token", accessToken);
+          setAuthCookie("access_token", accessToken);
           set({ accessToken, refreshToken, isAuthenticated: true }, false, "auth/setTokens");
         },
 
         setUser: (user, accessToken) => {
           localStorage.setItem("access_token", accessToken);
-          setCookie("access_token", accessToken);
-          setCookie(
+          setAuthCookie("access_token", accessToken);
+          setAuthCookie(
             "auth-storage",
             JSON.stringify({
               state: {
@@ -76,9 +78,9 @@ export const useAuthStore = create<AuthState>()(
         clearAuth: () => {
           localStorage.removeItem("access_token");
           localStorage.removeItem("refresh_token");
-          removeCookie("access_token");
-          removeCookie("refresh_token");
-          removeCookie("auth-storage");
+          removeAuthCookie("access_token");
+          removeAuthCookie("refresh_token");
+          removeAuthCookie("auth-storage");
           set(
             { user: null, accessToken: null, refreshToken: null, isAuthenticated: false },
             false,

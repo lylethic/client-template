@@ -2,6 +2,7 @@ import axios from "axios";
 import { toast } from "sonner";
 
 import { env } from "@/lib/env";
+import { removeAuthCookie, setAuthCookie } from "@/stores/auth.store";
 
 /**
  * Pre-configured Axios instance with:
@@ -17,7 +18,7 @@ export const apiClient = axios.create({
   baseURL: env.NEXT_PUBLIC_API_BASE_URL,
   headers: {
     "Content-Type": "application/json",
-    "ngrok-skip-browser-warning": "true",
+    ...(process.env.NODE_ENV === "development" ? { "ngrok-skip-browser-warning": "true" } : {}),
   },
   timeout: 30000,
 });
@@ -25,7 +26,9 @@ export const apiClient = axios.create({
 // ─── Request Interceptor ─────────────────────────────────────────────────────
 apiClient.interceptors.request.use(
   (config) => {
-    config.headers.set("ngrok-skip-browser-warning", "true");
+    if (process.env.NODE_ENV === "development") {
+      config.headers.set("ngrok-skip-browser-warning", "true");
+    }
     // Inject Bearer token if available
     const token = typeof window !== "undefined" ? localStorage.getItem("access_token") : null;
     if (token) {
@@ -94,14 +97,19 @@ apiClient.interceptors.response.use(
             },
             {
               headers: {
-                "ngrok-skip-browser-warning": "true",
+                ...(process.env.NODE_ENV === "development"
+                  ? { "ngrok-skip-browser-warning": "true" }
+                  : {}),
               },
             },
           );
           const newAccessToken: string = data.access_token;
           localStorage.setItem("access_token", newAccessToken);
+          setAuthCookie("access_token", newAccessToken);
+
           if (data.refresh_token) {
             localStorage.setItem("refresh_token", data.refresh_token);
+            setAuthCookie("refresh_token", data.refresh_token);
           }
           apiClient.defaults.headers.common.Authorization = `Bearer ${newAccessToken}`;
           processQueue(null, newAccessToken);
@@ -112,6 +120,9 @@ apiClient.interceptors.response.use(
           // Refresh failed — clear auth and redirect to login
           localStorage.removeItem("access_token");
           localStorage.removeItem("refresh_token");
+          removeAuthCookie("access_token");
+          removeAuthCookie("refresh_token");
+          removeAuthCookie("auth-storage");
           toast.error("Session expired. Please sign in again.");
           if (typeof window !== "undefined") {
             // eslint-disable-next-line @next/next/no-location-assign-relative-destination
@@ -123,6 +134,11 @@ apiClient.interceptors.response.use(
         }
       } else {
         isRefreshing = false;
+        localStorage.removeItem("access_token");
+        localStorage.removeItem("refresh_token");
+        removeAuthCookie("access_token");
+        removeAuthCookie("refresh_token");
+        removeAuthCookie("auth-storage");
         toast.error("Session expired. Please sign in again.");
         if (typeof window !== "undefined") {
           // eslint-disable-next-line @next/next/no-location-assign-relative-destination
